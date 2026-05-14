@@ -7,7 +7,6 @@ const todayMealRecords = {};
 let currentInputNumber = "";
 let selectedMeal = null;
 
-// 🍒 신규: 방문객 입력용 상태 변수
 let selectedVisitor = null;
 let visitorCount = 0;
 let tempVisitorType = "";
@@ -162,19 +161,16 @@ function selectMeal(mealType) {
   document.getElementById(`meal-${mealType}`).classList.add("active");
 }
 
-// -------------------------------------------------------------
-// 🍒 신규: 커스텀 터치 모달(Modal) 팝업 로직
-// -------------------------------------------------------------
 const visitorModal = document.getElementById("visitorModal");
 const modalTitle = document.getElementById("modalTitle");
 const visitorCountDisplay = document.getElementById("visitorCountDisplay");
 
 function selectVisitor(visitorType) {
   tempVisitorType = visitorType;
-  tempVisitorCountStr = "1"; // 초기값 1명 셋팅
+  tempVisitorCountStr = "1";
   modalTitle.innerText = `[${visitorType}] 식사 인원이 몇 명입니까?`;
   visitorCountDisplay.innerText = tempVisitorCountStr;
-  visitorModal.style.display = "flex"; // 모달 팝업 띄우기!
+  visitorModal.style.display = "flex";
 }
 
 function closeVisitorModal() {
@@ -183,7 +179,6 @@ function closeVisitorModal() {
 }
 
 function inputVisitorCount(num) {
-  // 처음에 '1'이 있으면 지우고 새로 입력, 아니면 뒤에 이어붙임 (최대 3자리 999명)
   if (tempVisitorCountStr === "1" && tempVisitorCountStr.length === 1) {
     tempVisitorCountStr = num.toString();
   } else {
@@ -210,22 +205,19 @@ function confirmVisitorCount() {
     return;
   }
 
-  // 데이터 확정
   visitorCount = count;
   selectedVisitor = tempVisitorType;
 
-  // 버튼 활성화 UI 처리
   document
     .querySelectorAll(".visitor-btn")
     .forEach((btn) => btn.classList.remove("active"));
   let prefix = tempVisitorType.substring(0, 2);
-  if (tempVisitorType === "IPA소속") prefix = "IP"; // 예외 처리
+  if (tempVisitorType === "IPA소속") prefix = "IP";
   document.getElementById(`vis-${prefix}`).classList.add("active");
 
-  clearNumber(); // 기존 입력된 사원번호 초기화
-  closeVisitorModal(); // 팝업 닫기
+  clearNumber();
+  closeVisitorModal();
 }
-// -------------------------------------------------------------
 
 function submitData() {
   const empName = employeeDB[currentInputNumber];
