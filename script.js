@@ -12,6 +12,37 @@ let visitorCount = 0;
 let tempVisitorType = "";
 let tempVisitorCountStr = "1";
 
+// -----------------------------------------------------------------
+// 🍒 신규: 키오스크 대기 화면(Intro) 제어 및 자동 복귀(Idle Timer)
+// -----------------------------------------------------------------
+const introScreen = document.getElementById("introScreen");
+let idleTimer = null;
+const IDLE_TIMEOUT = 60000; // 60초(60000ms) 동안 입력 없으면 메인화면으로 복귀
+
+function enterKiosk() {
+  introScreen.classList.add("hidden");
+  resetIdleTimer(); // 화면 열릴 때 타이머 시작
+}
+
+function returnToKioskIntro() {
+  introScreen.classList.remove("hidden"); // 대기화면 다시 표시
+  clearNumber(); // 작성중이던 사원번호 초기화
+  closeVisitorModal(); // 열려있던 팝업 닫기
+}
+
+// 화면을 터치/클릭할 때마다 복귀 타이머를 처음부터 다시 시작
+function resetIdleTimer() {
+  if (introScreen.classList.contains("hidden")) {
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(returnToKioskIntro, IDLE_TIMEOUT);
+  }
+}
+
+// 브라우저의 모든 터치/클릭 이벤트 발생 시 타이머 초기화 동작 연동
+document.addEventListener("click", resetIdleTimer);
+document.addEventListener("touchstart", resetIdleTimer);
+// -----------------------------------------------------------------
+
 function toggleFullScreen() {
   if (!document.fullscreenElement) {
     document.documentElement
@@ -269,6 +300,9 @@ function submitData() {
         document
           .querySelectorAll(".visitor-btn, .meal-btn")
           .forEach((btn) => btn.classList.remove("active"));
+
+        // 🍒 식사 완료 후 3초 뒤에 자동으로 대기화면으로 넘어가게 하려면 아래 주석 해제!
+        // setTimeout(returnToKioskIntro, 3000);
       } else {
         showToast("🚨 저장 실패! 관리자에게 문의하세요.", true);
       }
