@@ -1,0 +1,67 @@
+:root {
+  --bg-color: #f8fafc;
+  --text-main: #1e293b;
+  --sundo-yellow: #facc15;
+  --sundo-blue: #1e3a8a;
+  --color-red: #ef4444;
+  --color-cyan: #0ea5e9;
+  --color-blue: #2563eb;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Malgun Gothic', sans-serif; }
+body { background-color: var(--bg-color); color: var(--text-main); padding: 40px; }
+
+.report-container { max-width: 1000px; margin: 0 auto; background: #ffffff; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border-top: 8px solid var(--sundo-blue); }
+
+.report-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 20px; margin-bottom: 30px; }
+
+/* 🍒 타이틀 시인성 압도적 강화 */
+.main-title { color: var(--sundo-blue); font-size: 2.2rem; font-weight: 900; letter-spacing: 1px; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+
+.filter-area { display: flex; gap: 10px; align-items: center; font-weight: bold; }
+.month-picker { padding: 8px 12px; font-size: 1rem; border: 1px solid #cbd5e1; border-radius: 6px; }
+
+.btn-refresh { background-color: var(--sundo-blue); color: white; border: none; padding: 10px 20px; font-size: 1rem; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+.btn-refresh:hover { background-color: #172554; }
+
+/* 🍒 PDF 다운로드 버튼 디자인 (신뢰감을 주는 초록색) */
+.btn-pdf { background-color: #10b981; color: white; border: none; padding: 10px 20px; font-size: 1rem; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s; box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3); }
+.btn-pdf:hover { background-color: #059669; }
+
+.summary-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 30px; }
+.card { padding: 25px; border-radius: 10px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+.card h3 { font-size: 1.2rem; color: #475569; margin-bottom: 10px; font-weight: bold; }
+.card p { font-size: 3rem; font-weight: 900; color: var(--text-main); }
+.card .unit { font-size: 1.2rem; font-weight: normal; }
+.card.yellow { border-bottom: 5px solid var(--sundo-yellow); background: #fefce8; }
+.card.blue { border-bottom: 5px solid var(--sundo-blue); background: #eff6ff; }
+.card.cyan { border-bottom: 5px solid var(--color-cyan); background: #f0f9ff; }
+
+.details-section { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+.detail-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; }
+.detail-box h3 { margin-bottom: 20px; color: var(--sundo-blue); border-bottom: 2px dashed #cbd5e1; padding-bottom: 10px; font-size: 1.2rem; }
+
+.bar-chart-container { display: flex; flex-direction: column; gap: 15px; }
+.bar-row { display: flex; align-items: center; gap: 15px; }
+
+/* 🍒 그래프 일직선 정렬의 비밀: width 50px로 완전히 고정! */
+.label { width: 50px; font-weight: bold; font-size: 1.1rem; text-align: justify; text-align-last: justify; } 
+.bar { height: 30px; border-radius: 4px; transition: width 0.5s ease-out; }
+.value { font-weight: bold; width: 40px; text-align: right; font-size: 1.1rem; }
+
+.bg-red { background-color: var(--color-red); }
+.bg-cyan { background-color: var(--color-cyan); }
+.bg-blue { background-color: var(--color-blue); }
+
+.group-list { list-style: none; }
+.group-list li { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #e2e8f0; font-size: 1.1rem; }
+.group-list li:last-child { border-bottom: none; }
+
+/* 🍒 인쇄(PDF) 최적화 마법 */
+@media print {
+  body { padding: 0; background-color: white; }
+  .report-container { box-shadow: none; border-top: none; padding: 0; }
+  /* PDF 출력할 때 보기 싫은 버튼들은 전부 투명인간 처리! */
+  .filter-area { display: none; } 
+  .card { border: 1px solid #e2e8f0; } 
+}

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>선도화학 식수인원 관리 모니터</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="dashboard-container">
+    
+    <div class="header-top-bar">
+      <img src="logo.png" alt="SUNDOCHEM Logo" class="logo-img">
+      <span class="logo-text">SUNDOCHEMICAL</span>
+      <button onclick="toggleFullScreen()" class="fullscreen-btn">🔲 전체화면</button>
+    </div>
+
+    <header class="sub-header">
+      <div class="clock-display" id="clockDisplay"></div>
+      <h1 class="main-title">선도화학 식수인원 관리 모니터</h1>
+    </header>
+
+    <main class="grid-layout">
+      <section class="panel numpad-panel">
+        <h2 class="panel-title">번 호 입 력</h2>
+        <div class="display-box" id="empNumberDisplay">-</div>
+        <div class="numpad">
+          <button class="num-btn" onclick="inputNumber(1)">1</button>
+          <button class="num-btn" onclick="inputNumber(2)">2</button>
+          <button class="num-btn" onclick="inputNumber(3)">3</button>
+          <button class="num-btn" onclick="inputNumber(4)">4</button>
+          <button class="num-btn" onclick="inputNumber(5)">5</button>
+          <button class="num-btn" onclick="inputNumber(6)">6</button>
+          <button class="num-btn" onclick="inputNumber(7)">7</button>
+          <button class="num-btn" onclick="inputNumber(8)">8</button>
+          <button class="num-btn" onclick="inputNumber(9)">9</button>
+          <button class="num-btn" onclick="inputNumber(0)">0</button>
+          <button class="num-btn del-btn" onclick="deleteNumber()">←</button>
+          <button class="num-btn clear-btn" onclick="clearNumber()">C</button>
+        </div>
+      </section>
+
+      <section class="panel meal-panel">
+        <h2 class="emp-name" id="empNameDisplay"></h2>
+        <div class="meal-buttons">
+          <button class="meal-btn red" id="meal-아침" onclick="selectMeal('아침')">아침</button>
+          <button class="meal-btn cyan" id="meal-점심" onclick="selectMeal('점심')">점심</button>
+          <button class="meal-btn blue" id="meal-저녁" onclick="selectMeal('저녁')">저녁</button>
+        </div>
+        <button class="confirm-btn" onclick="submitData()">확 인</button>
+      </section>
+
+      <section class="panel visitor-panel">
+        <button class="visitor-btn cyan-border" id="vis-화학" onclick="selectVisitor('화학소속')">
+          방문[화학소속] <span class="circle bg-cyan"></span>
+        </button>
+        <button class="visitor-btn green-border" id="vis-산업" onclick="selectVisitor('산업소속')">
+          방문[산업소속] <span class="circle bg-green"></span>
+        </button>
+        <button class="visitor-btn yellow-border" id="vis-선일" onclick="selectVisitor('선일소속')">
+          방문[선일소속] <span class="circle bg-yellow"></span>
+        </button>
+        <button class="visitor-btn green-border" id="vis-IP" onclick="selectVisitor('IPA소속')">
+          방문(IPA) <span class="circle bg-green"></span>
+        </button>
+      </section>
+
+      <section class="panel message-panel">
+        <div id="memoContainer" class="memo-container">
+          <div id="memoDisplay" class="memo-display">
+            <div id="memoText" class="memo-text"></div>
+          </div>
+          <textarea id="messageInput" class="message-box" placeholder="여기를 터치하여 식당 아주머니께 전달할 사항을 입력하세요..."></textarea>
+        </div>
+      </section>
+    </main>
+  </div>
+  
+  <div id="toast" class="toast"></div>
+
+  <!-- 🍒 신규: 방문객 터치 키패드 팝업(Modal) -->
+  <div id="visitorModal" class="modal-overlay">
+    <div class="modal-content">
+      <h3 id="modalTitle">[소속] 식사 인원이 몇 명입니까?</h3>
+      <div class="display-box" id="visitorCountDisplay">1</div>
+      <div class="numpad">
+        <button class="num-btn" onclick="inputVisitorCount(1)">1</button>
+        <button class="num-btn" onclick="inputVisitorCount(2)">2</button>
+        <button class="num-btn" onclick="inputVisitorCount(3)">3</button>
+        <button class="num-btn" onclick="inputVisitorCount(4)">4</button>
+        <button class="num-btn" onclick="inputVisitorCount(5)">5</button>
+        <button class="num-btn" onclick="inputVisitorCount(6)">6</button>
+        <button class="num-btn" onclick="inputVisitorCount(7)">7</button>
+        <button class="num-btn" onclick="inputVisitorCount(8)">8</button>
+        <button class="num-btn" onclick="inputVisitorCount(9)">9</button>
+        <button class="num-btn" onclick="inputVisitorCount(0)">0</button>
+        <button class="num-btn del-btn" onclick="deleteVisitorCount()">←</button>
+        <button class="num-btn clear-btn" onclick="clearVisitorCount()">C</button>
+      </div>
+      <div class="modal-buttons">
+        <button class="modal-btn cancel" onclick="closeVisitorModal()">취 소</button>
+        <button class="modal-btn confirm" onclick="confirmVisitorCount()">확 인</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

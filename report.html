@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>대산공장 식수현황 정산</title>
+  <link rel="stylesheet" href="report.css">
+</head>
+<body>
+  <div class="report-container">
+    <header class="report-header">
+      <div class="logo-area">
+        <!-- 🍒 캡틴 지시사항: 제목 및 시인성 변경 -->
+        <h1 class="main-title">대산공장 식수현황 정산</h1>
+      </div>
+      <div class="filter-area">
+        <label for="monthPicker">정산 월 선택:</label>
+        <input type="month" id="monthPicker" class="month-picker">
+        <button onclick="fetchAndAnalyzeData()" class="btn-refresh">데이터 분석</button>
+        <!-- 🍒 캡틴 지시사항: PDF 다운로드 버튼 추가 -->
+        <button onclick="window.print()" class="btn-pdf">PDF 다운로드</button>
+      </div>
+    </header>
+
+    <section class="summary-cards">
+      <div class="card yellow">
+        <h3>총 식수 인원</h3>
+        <p id="totalMeals">0 <span class="unit">명</span></p>
+      </div>
+      <div class="card blue">
+        <h3>사내직원 식수</h3>
+        <p id="empMeals">0 <span class="unit">명</span></p>
+      </div>
+      <div class="card cyan">
+        <h3>방문객 식수</h3>
+        <p id="visitorMeals">0 <span class="unit">명</span></p>
+      </div>
+    </section>
+
+    <section class="details-section">
+      <div class="detail-box">
+        <!-- 🍒 캡틴 지시사항: 문구 수정 -->
+        <h3>시간대별 식수인원 (아침/점심/저녁)</h3>
+        <div class="bar-chart-container">
+          <div class="bar-row"><span class="label">아침</span><div class="bar bg-red" id="barBreakfast" style="width: 0%;"></div><span class="value" id="valBreakfast">0</span></div>
+          <div class="bar-row"><span class="label">점심</span><div class="bar bg-cyan" id="barLunch" style="width: 0%;"></div><span class="value" id="valLunch">0</span></div>
+          <div class="bar-row"><span class="label">저녁</span><div class="bar bg-blue" id="barDinner" style="width: 0%;"></div><span class="value" id="valDinner">0</span></div>
+        </div>
+      </div>
+      
+      <div class="detail-box">
+        <h3>소속별 방문객 비율</h3>
+        <ul id="visitorGroupList" class="group-list">
+          <!-- 스크립트에서 자동 생성 -->
+        </ul>
+      </div>
+    </section>
+  </div>
+  <script src="report.js"></script>
+</body>
+</html>
