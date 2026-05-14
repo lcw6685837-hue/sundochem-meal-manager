@@ -21,7 +21,8 @@ body { background-color: var(--bg-color); color: var(--text-light); display: fle
 .logo-img { height: 50px; margin-right: 15px; }
 .logo-text { letter-spacing: 3px; }
 
-.fullscreen-btn { position: absolute; right: 20px; background-color: var(--panel-bg); color: var(--text-light); border: 2px solid #475569; padding: 8px 15px; font-size: 1.1rem; font-weight: bold; border-radius: 6px; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+/* 🍒 수정됨: 전체화면 버튼 크기 대폭 축소 (padding 5px 10px, font-size 0.85rem) */
+.fullscreen-btn { position: absolute; right: 20px; background-color: var(--panel-bg); color: var(--text-light); border: 2px solid #475569; padding: 5px 10px; font-size: 0.85rem; font-weight: bold; border-radius: 6px; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
 .fullscreen-btn:hover { background-color: #334155; transform: scale(1.05); }
 
 .sub-header { text-align: center; margin: 20px 0 30px 0; padding: 0 20px; }
@@ -82,7 +83,7 @@ body { background-color: var(--bg-color); color: var(--text-light); display: fle
 .toast.show { visibility: visible; opacity: 1; top: 25%; }
 .toast.error { background-color: rgba(239, 68, 68, 0.95); }
 
-/* 🍒 신규: 방문객 터치 모달 팝업 디자인 */
+/* 방문객 터치 모달 팝업 디자인 */
 .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.75); z-index: 2000; justify-content: center; align-items: center; }
 .modal-content { background-color: var(--panel-bg); padding: 30px; border-radius: 12px; border: 2px solid var(--border-yellow); text-align: center; width: 420px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); }
 .modal-content h3 { font-size: 1.8rem; color: var(--text-light); margin-bottom: 25px; }
