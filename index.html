@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>선도화학 식수인원 관리 모니터</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -21,6 +21,7 @@
     </header>
 
     <main class="grid-layout">
+      <!-- 좌측: 번호 입력 패널 -->
       <section class="panel numpad-panel">
         <h2 class="panel-title">번 호 입 력</h2>
         <div class="display-box" id="empNumberDisplay">-</div>
@@ -40,6 +41,7 @@
         </div>
       </section>
 
+      <!-- 우측 상단: 식사 선택 패널 -->
       <section class="panel meal-panel">
         <h2 class="emp-name" id="empNameDisplay"></h2>
         <div class="meal-buttons">
@@ -50,6 +52,7 @@
         <button class="confirm-btn" onclick="submitData()">확 인</button>
       </section>
 
+      <!-- 우측 하단: 방문객 4구역 -->
       <section class="panel visitor-panel">
         <button class="visitor-btn cyan-border" id="vis-화학" onclick="selectVisitor('화학소속')">
           방문[화학소속] <span class="circle bg-cyan"></span>
@@ -65,6 +68,7 @@
         </button>
       </section>
 
+      <!-- 하단: 전달사항 전광판 -->
       <section class="panel message-panel">
         <div id="memoContainer" class="memo-container">
           <div id="memoDisplay" class="memo-display">
@@ -78,12 +82,12 @@
   
   <div id="toast" class="toast"></div>
 
-  <!-- 🍒 신규: 방문객 터치 키패드 팝업(Modal) -->
+  <!-- 방문객 터치 키패드 팝업(Modal) -->
   <div id="visitorModal" class="modal-overlay">
     <div class="modal-content">
       <h3 id="modalTitle">[소속] 식사 인원이 몇 명입니까?</h3>
-      <div class="display-box" id="visitorCountDisplay">1</div>
-      <div class="numpad">
+      <div class="display-box modal-display" id="visitorCountDisplay">1</div>
+      <div class="numpad modal-numpad">
         <button class="num-btn" onclick="inputVisitorCount(1)">1</button>
         <button class="num-btn" onclick="inputVisitorCount(2)">2</button>
         <button class="num-btn" onclick="inputVisitorCount(3)">3</button>
