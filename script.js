@@ -21,13 +21,20 @@ const IDLE_TIMEOUT = 60000; // 60초 무입력 시 자동 복귀
 // 🍒 화면 전환 로직 제어 (Intro -> Selection -> Dashboard)
 // -----------------------------------------------------------------
 function enterKiosk() {
+  // '입장하기'를 누를 때 전체화면으로 강제 진입!
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen().catch((err) => {
+      console.log("전체화면 전환을 지원하지 않는 기기/브라우저입니다.");
+    });
+  }
+
   introScreen.classList.add("hidden");
   document.getElementById("selectionScreen").classList.remove("d-none");
   document.getElementById("dashboardScreen").classList.add("d-none");
   resetIdleTimer(); 
 }
 
-// 완전히 처음(입장하기)으로 돌아가는 함수 (60초 무입력 시 작동)
+// 완전히 처음(입장하기)으로 돌아가는 함수
 function returnToKioskIntro() {
   introScreen.classList.remove("hidden"); 
   document.getElementById("selectionScreen").classList.add("d-none");
@@ -36,7 +43,7 @@ function returnToKioskIntro() {
   closeVisitorModal(); 
 }
 
-// 🍒 신규: 식사 저장 완료 후 다음 사람을 위해 '선택 화면'으로 돌아가는 함수
+// 식사 저장 완료 후 다음 사람을 위해 '선택 화면'으로 돌아가는 함수
 function returnToSelectionScreen() {
   document.getElementById("dashboardScreen").classList.add("d-none");
   document.getElementById("selectionScreen").classList.remove("d-none");
@@ -65,17 +72,15 @@ function clearSelection() {
 }
 
 // -----------------------------------------------------------------
-// 🍒 사원/방문객 선택 연결 브릿지 (모달 및 화면 전환 연동)
+// 🍒 사원/방문객 선택 연결 브릿지
 // -----------------------------------------------------------------
 function selectEmployeeFromList(empNum, empName) {
-  clearSelection(); // 기존 데이터 초기화
+  clearSelection(); 
   currentInputNumber = empNum;
   currentEmpName = empName;
   
-  // 대시보드 화면에 이름 세팅
   document.getElementById("empNameDisplay").innerText = currentEmpName;
   
-  // 화면 전환
   document.getElementById("selectionScreen").classList.add("d-none");
   document.getElementById("dashboardScreen").classList.remove("d-none");
   resetIdleTimer();
@@ -87,20 +92,11 @@ function selectVisitorFromList(visitorType) {
   tempVisitorCountStr = "1";
   document.getElementById("modalTitle").innerText = `[${visitorType}] 식사 인원이 몇 명입니까?`;
   document.getElementById("visitorCountDisplay").innerText = tempVisitorCountStr;
-  document.getElementById("visitorModal").style.display = "flex"; // 모달 띄우기
+  document.getElementById("visitorModal").style.display = "flex"; 
   resetIdleTimer();
 }
-// -----------------------------------------------------------------
 
-function toggleFullScreen() {
-  if (!document.fullscreenElement) {
-    document.documentElement
-      .requestFullscreen()
-      .catch((err) => console.error(`전체화면 전환 에러: ${err.message}`));
-  } else {
-    if (document.exitFullscreen) document.exitFullscreen();
-  }
-}
+// -----------------------------------------------------------------
 
 function showToast(message, isError = false) {
   const toast = document.getElementById("toast");
@@ -180,7 +176,8 @@ messageInput.addEventListener("blur", () => {
   memoDisplay.style.display = "flex";
   memoText.style.animation = "none";
   void memoText.offsetWidth;
-  memoText.style.animation = "scroll-right 15s linear infinite, rainbow-text 6s linear infinite";
+  // 🍒 무지개 애니메이션 제거! 단색 스크롤만 깔끔하게 구동!
+  memoText.style.animation = "scroll-right 15s linear infinite"; 
 });
 
 // --- 식사 종류 선택 로직 ---
@@ -234,12 +231,10 @@ function confirmVisitorCount() {
   visitorCount = count;
   selectedVisitor = tempVisitorType;
   
-  // 방문객 정보를 대시보드 화면에 세팅
   document.getElementById("empNameDisplay").innerText = `${selectedVisitor} (${visitorCount}명)`;
 
   closeVisitorModal();
 
-  // 화면 전환
   document.getElementById("selectionScreen").classList.add("d-none");
   document.getElementById("dashboardScreen").classList.remove("d-none");
   resetIdleTimer();
@@ -285,7 +280,6 @@ function submitData() {
         }
         showToast(`✅ [${payload.empName}]님, 식수(${payload.count}명)가 저장되었습니다!`);
         
-        // 🍒 캡틴 지시 완수: 식사 저장 완료 시, 2초 후 '본인확인 선택 화면'으로 복귀!
         setTimeout(returnToSelectionScreen, 2000);
       } else {
         showToast("🚨 저장 실패! 관리자에게 문의하세요.", true);

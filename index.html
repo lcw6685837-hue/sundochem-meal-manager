@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <title>선도화학 식수인원 관리 모니터</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -16,6 +18,13 @@
     <div class="intro-content">
       <h1 class="intro-message">선도화학 가족 여러분의<br>건강하고 맛있는 식사를 응원합니다!</h1>
       <button class="intro-btn" onclick="enterKiosk()">입장하기</button>
+    </div>
+    
+    <div id="memoContainer" class="intro-memo">
+      <div id="memoDisplay" class="memo-display">
+        <div id="memoText" class="memo-text"></div>
+      </div>
+      <textarea id="messageInput" class="message-box" placeholder="여기를 터치하여 식당 아주머니께 전달할 사항을 입력하세요..."></textarea>
     </div>
   </div>
 
@@ -103,8 +112,7 @@
     <div class="header-top-bar">
       <img src="logo.png" alt="SUNDOCHEM Logo" class="logo-img">
       <span class="logo-text">SUNDOCHEMICAL</span>
-      <button onclick="toggleFullScreen()" class="fullscreen-btn">🔲 전체화면</button>
-    </div>
+      </div>
 
     <header class="sub-header">
       <div class="clock-display" id="clockDisplay"></div>
@@ -124,15 +132,6 @@
         </div>
         
         <button class="confirm-btn-large" onclick="submitData()">확 인</button>
-      </section>
-
-      <section class="panel message-panel">
-        <div id="memoContainer" class="memo-container">
-          <div id="memoDisplay" class="memo-display">
-            <div id="memoText" class="memo-text"></div>
-          </div>
-          <textarea id="messageInput" class="message-box" placeholder="여기를 터치하여 식당 아주머니께 전달할 사항을 입력하세요..."></textarea>
-        </div>
       </section>
     </main>
   </div>
