@@ -15,26 +15,20 @@ let tempVisitorCountStr = "1";
 
 const introScreen = document.getElementById("introScreen");
 let idleTimer = null;
-const IDLE_TIMEOUT = 60000; // 60초 무입력 시 자동 복귀
+const IDLE_TIMEOUT = 60000; 
 
-// -----------------------------------------------------------------
-// 🍒 화면 전환 로직 제어 (Intro -> Selection -> Dashboard)
-// -----------------------------------------------------------------
 function enterKiosk() {
-  // '입장하기'를 누를 때 전체화면으로 강제 진입!
   if (!document.fullscreenElement) {
     document.documentElement.requestFullscreen().catch((err) => {
       console.log("전체화면 전환을 지원하지 않는 기기/브라우저입니다.");
     });
   }
-
   introScreen.classList.add("hidden");
   document.getElementById("selectionScreen").classList.remove("d-none");
   document.getElementById("dashboardScreen").classList.add("d-none");
   resetIdleTimer(); 
 }
 
-// 완전히 처음(입장하기)으로 돌아가는 함수
 function returnToKioskIntro() {
   introScreen.classList.remove("hidden"); 
   document.getElementById("selectionScreen").classList.add("d-none");
@@ -43,7 +37,6 @@ function returnToKioskIntro() {
   closeVisitorModal(); 
 }
 
-// 식사 저장 완료 후 다음 사람을 위해 '선택 화면'으로 돌아가는 함수
 function returnToSelectionScreen() {
   document.getElementById("dashboardScreen").classList.add("d-none");
   document.getElementById("selectionScreen").classList.remove("d-none");
@@ -61,7 +54,6 @@ function resetIdleTimer() {
 document.addEventListener("click", resetIdleTimer);
 document.addEventListener("touchstart", resetIdleTimer);
 
-// 선택 데이터 초기화 함수
 function clearSelection() {
   currentInputNumber = "";
   currentEmpName = "";
@@ -71,16 +63,11 @@ function clearSelection() {
   document.querySelectorAll(".meal-btn").forEach((btn) => btn.classList.remove("active"));
 }
 
-// -----------------------------------------------------------------
-// 🍒 사원/방문객 선택 연결 브릿지
-// -----------------------------------------------------------------
 function selectEmployeeFromList(empNum, empName) {
   clearSelection(); 
   currentInputNumber = empNum;
   currentEmpName = empName;
-  
   document.getElementById("empNameDisplay").innerText = currentEmpName;
-  
   document.getElementById("selectionScreen").classList.add("d-none");
   document.getElementById("dashboardScreen").classList.remove("d-none");
   resetIdleTimer();
@@ -96,8 +83,6 @@ function selectVisitorFromList(visitorType) {
   resetIdleTimer();
 }
 
-// -----------------------------------------------------------------
-
 function showToast(message, isError = false) {
   const toast = document.getElementById("toast");
   toast.innerText = message;
@@ -108,11 +93,29 @@ function showToast(message, isError = false) {
   }, 1500);
 }
 
+const memoContainer = document.getElementById("memoContainer");
+const memoDisplay = document.getElementById("memoDisplay");
+const memoText = document.getElementById("memoText");
+const messageInput = document.getElementById("messageInput");
+const defaultMessage = "[알림] 이곳을 터치하여 식당 전달사항을 입력하세요.";
+
 function loadEmployeeData() {
   fetch(WEB_APP_URL, { redirect: "follow" })
     .then((response) => response.json())
     .then((data) => {
-      employeeDB = data;
+      if (data.employees) {
+        employeeDB = data.employees;
+        const savedMemo = data.memo;
+        if (savedMemo && savedMemo.trim() !== "") {
+          memoText.textContent = savedMemo.trim();
+          messageInput.value = savedMemo.trim();
+        } else {
+          memoText.textContent = defaultMessage;
+          messageInput.value = "";
+        }
+      } else {
+        employeeDB = data;
+      }
     })
     .catch((error) => {
       console.error("명단 로드 실패:", error);
@@ -138,25 +141,6 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
-// --- 메모 패널 로직 ---
-const memoContainer = document.getElementById("memoContainer");
-const memoDisplay = document.getElementById("memoDisplay");
-const memoText = document.getElementById("memoText");
-const messageInput = document.getElementById("messageInput");
-const defaultMessage = "[알림] 이곳을 터치하여 식당 전달사항을 입력하세요.";
-
-function loadMemo() {
-  const savedMemo = localStorage.getItem("sundochem_memo");
-  if (savedMemo && savedMemo.trim() !== "") {
-    memoText.textContent = savedMemo;
-    messageInput.value = savedMemo;
-  } else {
-    memoText.textContent = defaultMessage;
-    messageInput.value = "";
-  }
-}
-loadMemo();
-
 memoContainer.addEventListener("click", () => {
   memoDisplay.style.display = "none";
   messageInput.style.display = "block";
@@ -165,22 +149,28 @@ memoContainer.addEventListener("click", () => {
 
 messageInput.addEventListener("blur", () => {
   const newMemo = messageInput.value.trim();
+  
   if (newMemo) {
-    localStorage.setItem("sundochem_memo", newMemo);
     memoText.textContent = newMemo;
   } else {
-    localStorage.removeItem("sundochem_memo");
     memoText.textContent = defaultMessage;
   }
+  
   messageInput.style.display = "none";
   memoDisplay.style.display = "flex";
   memoText.style.animation = "none";
   void memoText.offsetWidth;
-  // 🍒 무지개 애니메이션 제거! 단색 스크롤만 깔끔하게 구동!
-  memoText.style.animation = "scroll-right 15s linear infinite"; 
+  // 🍒 JS에서도 scroll-right 적용!
+  memoText.style.animation = "scroll-right 30s linear infinite"; 
+
+  const memoPayload = { action: "saveMemo", memo: newMemo };
+  fetch(WEB_APP_URL, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify(memoPayload),
+  }).catch(err => console.error("메모 동기화 실패:", err));
 });
 
-// --- 식사 종류 선택 로직 ---
 function selectMeal(mealType) {
   if (
     currentInputNumber !== "" &&
@@ -195,7 +185,6 @@ function selectMeal(mealType) {
   document.getElementById(`meal-${mealType}`).classList.add("active");
 }
 
-// --- 방문객 모달 키패드 로직 ---
 function closeVisitorModal() {
   document.getElementById("visitorModal").style.display = "none";
   tempVisitorType = "";
@@ -232,7 +221,6 @@ function confirmVisitorCount() {
   selectedVisitor = tempVisitorType;
   
   document.getElementById("empNameDisplay").innerText = `${selectedVisitor} (${visitorCount}명)`;
-
   closeVisitorModal();
 
   document.getElementById("selectionScreen").classList.add("d-none");
@@ -240,7 +228,6 @@ function confirmVisitorCount() {
   resetIdleTimer();
 }
 
-// --- 최종 데이터 서버 전송 로직 ---
 function submitData() {
   if (!currentEmpName && !selectedVisitor) {
     showToast("🚨 본인 확인 또는 방문객 선택이 누락되었습니다.", true);
@@ -279,7 +266,6 @@ function submitData() {
           todayMealRecords[currentInputNumber].push(selectedMeal);
         }
         showToast(`✅ [${payload.empName}]님, 식수(${payload.count}명)가 저장되었습니다!`);
-        
         setTimeout(returnToSelectionScreen, 2000);
       } else {
         showToast("🚨 저장 실패! 관리자에게 문의하세요.", true);

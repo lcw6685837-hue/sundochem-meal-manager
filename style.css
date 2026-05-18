@@ -49,10 +49,10 @@ body { background-color: var(--bg-color); color: var(--text-light); width: 100vw
 }
 .intro-btn:active { transform: scale(0.95); background: rgba(255, 255, 255, 0.9); }
 
-/* 🍒 신규: 첫 화면 전용 알림 패널 (캡틴 디자인 반영) */
+/* 🍒 알림 패널: 좌측에서 우측으로 흐르도록 수정 */
 .intro-memo {
   position: absolute; bottom: 5vh; width: 85%; max-width: 900px; height: 9vh;
-  background-color: #fde68a; /* 노란색 배경 */
+  background-color: #fde68a;
   border: 4px solid #facc15; border-radius: 12px;
   box-shadow: 0 10px 20px rgba(0,0,0,0.5); cursor: pointer; overflow: hidden;
 }
@@ -61,9 +61,10 @@ body { background-color: var(--bg-color); color: var(--text-light); width: 100vw
 }
 .intro-memo .memo-text {
   position: absolute; white-space: nowrap; font-size: 3.5vh; line-height: 9vh; font-weight: 900; 
-  color: #0ea5e9; /* 시안색 텍스트 */
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-  animation: scroll-right 15s linear infinite; 
+  color: #000000; 
+  text-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff, 0 0 20px #0ea5e9, 0 0 30px #0ea5e9;
+  /* 🍒 왼쪽에서 오른쪽으로 30초 동안 이동 */
+  animation: scroll-right 30s linear infinite; 
 }
 .intro-memo .message-box {
   display: none; width: 100%; height: 100%; background-color: transparent; 
@@ -73,8 +74,12 @@ body { background-color: var(--bg-color); color: var(--text-light); width: 100vw
 .intro-memo .message-box:focus {
   background-color: #fef08a; border: 3px solid var(--border-cyan); border-radius: 8px;
 }
-@keyframes scroll-right { from { left: 0; transform: translateX(-100%); } to { left: 100%; transform: translateX(0); } }
 
+/* 🍒 좌측에서 우측으로 흐르는 키프레임 */
+@keyframes scroll-right { 
+  from { left: 0; transform: translateX(-100%); } 
+  to { left: 100%; transform: translateX(0); } 
+}
 
 /* 2. 본인확인 선택 화면 (Selection Screen) */
 .d-none { display: none !important; }
@@ -165,11 +170,10 @@ body { background-color: var(--bg-color); color: var(--text-light); width: 100vw
 .meal-btn.blue { background-color: var(--color-blue); }
 .meal-btn.active { opacity: 1; transform: scale(1.15); border: 0.5vh solid #ffffff; box-shadow: 0 0 40px rgba(255, 255, 255, 0.9), inset 0 0 20px rgba(255, 255, 255, 0.5); z-index: 10; }
 
-/* 🍒 다이어트 성공한 확인 버튼 (크기 조절) */
 .confirm-btn-large {
-  width: 40%; /* 80%에서 40%로 축소 */
+  width: 40%;
   background-color: var(--color-green); color: white; border: none;
-  padding: 2vh 0; /* 3vh에서 2vh로 높이 축소 */
+  padding: 2vh 0; 
   font-size: 3.5vh; font-weight: bold; border-radius: 12px;
   cursor: pointer; transition: all 0.2s; box-shadow: 0 8px 20px rgba(0,0,0,0.4);
 }
@@ -180,7 +184,7 @@ body { background-color: var(--bg-color); color: var(--text-light); width: 100vw
 .toast.show { visibility: visible; opacity: 1; top: 25%; }
 .toast.error { background-color: rgba(239, 68, 68, 0.95); }
 
-/* 방문객 모달 (2배 확대형 유지) */
+/* 방문객 모달 */
 .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center; }
 .modal-content { background-color: var(--panel-bg); padding: 4vh; border-radius: 16px; border: 4px solid var(--border-yellow); text-align: center; width: 60vh; box-shadow: 0 15px 40px rgba(0,0,0,0.9); }
 .modal-content h3 { font-size: 3.5vh; color: var(--text-light); margin-bottom: 2.5vh; } 
