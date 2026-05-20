@@ -79,7 +79,6 @@ body { background-color: var(--bg-color); color: var(--text-light); width: 100vw
 /* 상단 영역 (시계 + 식사버튼) */
 .selection-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2vh; }
 
-/* 🍒 캡틴 전용: LED 디지털 시계 스타일 완벽 이식 */
 .led-clock-wrapper {
   display: flex; align-items: center; background-color: #0a0a0a; padding: 1vh 2vw; 
   border-radius: 8px; border: 3px solid #1f2937; gap: 2vw; 
@@ -89,31 +88,46 @@ body { background-color: var(--bg-color); color: var(--text-light); width: 100vw
 .led-date { 
   color: #22c55e; font-family: 'Consolas', 'Courier New', monospace; font-size: 3.5vh; 
   font-weight: bold; text-shadow: 0 0 8px rgba(34, 197, 94, 0.8); letter-spacing: 0.1vw; 
+  white-space: nowrap; 
 }
 .led-days { display: flex; gap: 1vw; color: #64748b; font-size: 1.8vh; font-weight: bold; }
 .led-days .day-item { display: flex; flex-direction: column; align-items: center; gap: 0.3vh; }
 .led-days .day-item .dot { width: 0.6vh; height: 0.6vh; border-radius: 50%; background-color: transparent; }
 .led-days .day-item.active { color: #ffffff; }
 .led-days .day-item.active .dot { background-color: #facc15; box-shadow: 0 0 5px #facc15; }
-.led-days .day-sat { color: #3b82f6; } /* 토요일 파란색 */
-.led-days .day-sun { color: #ef4444; } /* 일요일 빨간색 */
+.led-days .day-sat { color: #3b82f6; } 
+.led-days .day-sun { color: #ef4444; } 
 
 .led-time { 
   color: #ef4444; font-family: 'Consolas', 'Courier New', monospace; font-size: 6.5vh; 
   font-weight: bold; text-shadow: 0 0 12px rgba(239, 68, 68, 0.8); display: flex; 
   align-items: baseline; gap: 0.5vw; font-variant-numeric: tabular-nums; 
+  white-space: nowrap; 
 }
 .led-time .sec { font-size: 4vh; }
 
-.global-meal-buttons { display: flex; gap: 1vw; }
+.global-meal-buttons { display: flex; gap: 0.8vw; }
+
 .g-meal-btn { 
-  padding: 1.5vh 3vw; font-size: 3.5vh; font-weight: 900; color: white; 
-  border: 4px solid transparent; border-radius: 12px; cursor: pointer; opacity: 0.4; transition: all 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+  padding: 1.5vh 2vw; font-size: 3.5vh; font-weight: 900; color: white; 
+  border: 4px solid transparent; border-radius: 12px; cursor: pointer; opacity: 0.4; 
+  transition: all 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+  white-space: nowrap; 
 }
 .g-meal-btn.active { opacity: 1; transform: scale(1.1); border-color: white; box-shadow: 0 0 20px rgba(255,255,255,0.9); z-index: 10; }
 .bg-green { background-color: #65a30d; } 
 .bg-orange { background-color: #f59e0b; } 
 .bg-purple { background-color: #9333ea; } 
+
+/* 🍒 캡틴 지시 완수: 종료 버튼 시인성 압도적 극대화! */
+.bg-reset { 
+  background-color: #f97316 !important; 
+  color: #ffffff !important;
+  opacity: 1 !important; /* 👈 투명도 원천 차단! 무조건 100% 진하게 */
+  border: 3px solid #ea580c !important; 
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.6); /* 👈 글자 그림자로 또렷함 증가 */
+}
+.bg-reset:active { transform: scale(0.95); }
 
 .selection-content { display: flex; gap: 2vw; flex: 1; min-height: 0; }
 .group-box { border-radius: 10px; position: relative; padding: 4vh 1vw 1vw 1vw; display: flex; flex-direction: column; align-items: stretch; box-shadow: inset 0 0 10px rgba(0,0,0,0.05); }

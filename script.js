@@ -52,6 +52,29 @@ function setGlobalMeal(meal) {
   resetIdleTimer();
 }
 
+// -----------------------------------------------------------------
+// 🍒 캡틴 지시 완수: '종료' 시 화면 100% 초기화 함수 (태블릿 웹뷰 호환성 극대화)
+// -----------------------------------------------------------------
+function resetMealUI() {
+  // 1. 모든 직원의 식사 완료 색상을 하나씩 안전하게 삭제 (태블릿 에러 방지)
+  document.querySelectorAll(".name-btn").forEach((btn) => {
+    btn.classList.remove("done-아침");
+    btn.classList.remove("done-점심");
+    btn.classList.remove("done-저녁");
+  });
+
+  // 2. 선택된 식사(아침/점심/저녁) 활성화 상태 해제
+  globalSelectedMeal = null;
+  document
+    .querySelectorAll(".g-meal-btn")
+    .forEach((btn) => btn.classList.remove("active"));
+
+  // 3. 알림 메시지 띄우기
+  showToast("🔄 모든 식사 활성화 상태가 초기화되었습니다.");
+  resetIdleTimer();
+}
+// -----------------------------------------------------------------
+
 function handleEmployeeClick(empNum, empName) {
   if (!globalSelectedMeal) {
     showToast("🚨 우측 상단의 식사(아침/점심/저녁)를 먼저 선택하세요!", true);
@@ -228,9 +251,6 @@ function loadEmployeeDataAndMemo() {
 loadEmployeeDataAndMemo();
 setInterval(loadEmployeeDataAndMemo, 30000);
 
-// -----------------------------------------------------------------
-// 🍒 캡틴 전용: LED 디지털 시계 및 요일 매칭 엔진
-// -----------------------------------------------------------------
 function updateClock() {
   const now = new Date();
   const year = now.getFullYear();
@@ -240,9 +260,8 @@ function updateClock() {
   const minutes = String(now.getMinutes()).padStart(2, "0");
   const seconds = String(now.getSeconds()).padStart(2, "0");
 
-  const dayOfWeek = now.getDay(); // 0(일) ~ 6(토)
+  const dayOfWeek = now.getDay();
 
-  // 캡틴 이미지(월~일 순서) 맞춤 매열
   const daysData = [
     { text: "월", index: 1 },
     { text: "화", index: 2 },
@@ -260,11 +279,9 @@ function updateClock() {
     if (d.text === "토") colorClass = "day-sat";
     if (d.text === "일") colorClass = "day-sun";
 
-    // 점(dot)과 글자를 세로로 배치
     dayHtml += `<div class="day-item ${isActive} ${colorClass}"><div class="dot"></div><span>${d.text}</span></div>`;
   });
 
-  // LED 레이아웃으로 화면 렌더링
   document.getElementById("clockDisplay").innerHTML = `
     <div class="led-clock-wrapper">
       <div class="led-left">
