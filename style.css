@@ -87,8 +87,7 @@ body { background-color: var(--bg-color); color: var(--text-light); width: 100vw
 .led-left { display: flex; flex-direction: column; align-items: center; gap: 0.5vh; }
 .led-date { 
   color: #22c55e; font-family: 'Consolas', 'Courier New', monospace; font-size: 3.5vh; 
-  font-weight: bold; text-shadow: 0 0 8px rgba(34, 197, 94, 0.8); letter-spacing: 0.1vw; 
-  white-space: nowrap; 
+  font-weight: bold; text-shadow: 0 0 8px rgba(34, 197, 94, 0.8); letter-spacing: 0.1vw; white-space: nowrap; 
 }
 .led-days { display: flex; gap: 1vw; color: #64748b; font-size: 1.8vh; font-weight: bold; }
 .led-days .day-item { display: flex; flex-direction: column; align-items: center; gap: 0.3vh; }
@@ -101,32 +100,20 @@ body { background-color: var(--bg-color); color: var(--text-light); width: 100vw
 .led-time { 
   color: #ef4444; font-family: 'Consolas', 'Courier New', monospace; font-size: 6.5vh; 
   font-weight: bold; text-shadow: 0 0 12px rgba(239, 68, 68, 0.8); display: flex; 
-  align-items: baseline; gap: 0.5vw; font-variant-numeric: tabular-nums; 
-  white-space: nowrap; 
+  align-items: baseline; gap: 0.5vw; font-variant-numeric: tabular-nums; white-space: nowrap; 
 }
 .led-time .sec { font-size: 4vh; }
 
 .global-meal-buttons { display: flex; gap: 0.8vw; }
-
 .g-meal-btn { 
   padding: 1.5vh 2vw; font-size: 3.5vh; font-weight: 900; color: white; 
-  border: 4px solid transparent; border-radius: 12px; cursor: pointer; opacity: 0.4; 
-  transition: all 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-  white-space: nowrap; 
+  border: 4px solid transparent; border-radius: 12px; cursor: pointer; opacity: 0.4; transition: all 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.3); white-space: nowrap; 
 }
 .g-meal-btn.active { opacity: 1; transform: scale(1.1); border-color: white; box-shadow: 0 0 20px rgba(255,255,255,0.9); z-index: 10; }
 .bg-green { background-color: #65a30d; } 
 .bg-orange { background-color: #f59e0b; } 
 .bg-purple { background-color: #9333ea; } 
-
-/* 🍒 캡틴 지시 완수: 종료 버튼 시인성 압도적 극대화! */
-.bg-reset { 
-  background-color: #f97316 !important; 
-  color: #ffffff !important;
-  opacity: 1 !important; /* 👈 투명도 원천 차단! 무조건 100% 진하게 */
-  border: 3px solid #ea580c !important; 
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.6); /* 👈 글자 그림자로 또렷함 증가 */
-}
+.bg-reset { background-color: #f97316 !important; color: #ffffff !important; opacity: 1 !important; border: 3px solid #ea580c !important; text-shadow: 2px 2px 4px rgba(0,0,0,0.6); }
 .bg-reset:active { transform: scale(0.95); }
 
 .selection-content { display: flex; gap: 2vw; flex: 1; min-height: 0; }
@@ -137,7 +124,31 @@ body { background-color: var(--bg-color); color: var(--text-light); width: 100vw
 .box-middle { flex: 1; display: flex; flex-direction: column; gap: 4vh; }
 .box-seonil { background-color: #fef9c3; border: 2px solid #fde047; flex: 2.2; border-radius: 10px; position: relative; padding: 4vh 1vw 1vw 1vw; display: flex; flex-direction: column; } 
 .box-sundoind { background-color: #fef9c3; border: 2px solid #fde047; flex: 1; border-radius: 10px; position: relative; padding: 4vh 1vw 1vw 1vw; display: flex; flex-direction: column; } 
-.box-visitor { background-color: #f8fafc; border: 2px solid #cbd5e1; flex: 0.7; } 
+
+/* 🍒 캡틴 지시 완수: 우측 영역 (방문객 + 카운터) 분할 정렬 */
+.right-column { flex: 0.7; display: flex; flex-direction: column; gap: 2vh; }
+.box-visitor { flex: 1; background-color: #f8fafc; border: 2px solid #cbd5e1; } 
+
+/* 🍒 실시간 식수 카운터 보드 디자인 */
+.counter-box {
+  background-color: #e0f2fe; border: 4px solid #38bdf8; border-radius: 12px;
+  padding: 1.5vh; display: flex; flex-direction: column; gap: 0.8vh;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+.counter-row { display: flex; gap: 0.5vw; }
+.counter-row div {
+  display: flex; justify-content: center; align-items: center;
+  font-size: 2.8vh; font-weight: 900; border-radius: 8px; padding: 1vh 0;
+  color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+.c-label { flex: 1.2; }
+.c-num { flex: 1.5; background-color: rgba(0,0,0,0.15); font-family: 'Consolas', monospace; } /* 숫자 박스 약간 어둡게 */
+.c-unit { flex: 0.8; }
+
+.c-green div { background-color: #65a30d; }
+.c-orange div { background-color: #f59e0b; }
+.c-purple div { background-color: #9333ea; }
+.c-total div { background-color: white; color: #1e293b; border: 2px solid #cbd5e1; text-shadow: none; }
 
 .name-columns { width: 100%; height: 100%; overflow: hidden; }
 .cols-3 { column-count: 3; column-gap: 1vw; }

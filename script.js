@@ -2,7 +2,7 @@
 const WEB_APP_URL =
   "https://script.google.com/macros/s/AKfycbzaGhrbsTtD5eWlchjFteHWkSxN3Tx0HILuWAoT108RWivqLncW0p7tG64Fw4v6AY3j/exec";
 
-const todayMealRecords = {};
+let todayMealRecords = {};
 const introScreen = document.getElementById("introScreen");
 const selectionScreen = document.getElementById("selectionScreen");
 let idleTimer = null;
@@ -11,6 +11,52 @@ const IDLE_TIMEOUT = 30000;
 let globalSelectedMeal = null;
 let tempVisitorType = "";
 let tempVisitorCountStr = "1";
+
+// 🍒 실시간 식수 카운터 변수 (오늘 날짜 기준)
+let dailyCounts = {
+  아침: 0,
+  점심: 0,
+  저녁: 0,
+  date: new Date().toLocaleDateString(),
+};
+
+// 앱 실행 시 저장된 카운터 불러오기
+function loadLocalCounts() {
+  const saved = localStorage.getItem("sundo_daily_counts");
+  if (saved) {
+    const parsed = JSON.parse(saved);
+    // 저장된 날짜가 오늘과 같다면 이어가고, 다르면 0으로 리셋!
+    if (parsed.date === new Date().toLocaleDateString()) {
+      dailyCounts = parsed;
+    } else {
+      saveLocalCounts();
+    }
+  } else {
+    saveLocalCounts();
+  }
+  updateCountUI();
+}
+
+function saveLocalCounts() {
+  localStorage.setItem("sundo_daily_counts", JSON.stringify(dailyCounts));
+}
+
+function updateCountUI() {
+  document.getElementById("count-아침").innerText = dailyCounts["아침"];
+  document.getElementById("count-점심").innerText = dailyCounts["점심"];
+  document.getElementById("count-저녁").innerText = dailyCounts["저녁"];
+  document.getElementById("count-total").innerText =
+    dailyCounts["아침"] + dailyCounts["점심"] + dailyCounts["저녁"];
+}
+
+function incrementCount(meal, count) {
+  dailyCounts[meal] += count;
+  saveLocalCounts();
+  updateCountUI();
+}
+
+// 초기 로드
+loadLocalCounts();
 
 function enterKiosk() {
   if (!document.fullscreenElement) {
@@ -52,28 +98,19 @@ function setGlobalMeal(meal) {
   resetIdleTimer();
 }
 
-// -----------------------------------------------------------------
-// 🍒 캡틴 지시 완수: '종료' 시 화면 100% 초기화 함수 (태블릿 웹뷰 호환성 극대화)
-// -----------------------------------------------------------------
 function resetMealUI() {
-  // 1. 모든 직원의 식사 완료 색상을 하나씩 안전하게 삭제 (태블릿 에러 방지)
   document.querySelectorAll(".name-btn").forEach((btn) => {
     btn.classList.remove("done-아침");
     btn.classList.remove("done-점심");
     btn.classList.remove("done-저녁");
   });
-
-  // 2. 선택된 식사(아침/점심/저녁) 활성화 상태 해제
   globalSelectedMeal = null;
   document
     .querySelectorAll(".g-meal-btn")
     .forEach((btn) => btn.classList.remove("active"));
-
-  // 3. 알림 메시지 띄우기
   showToast("🔄 모든 식사 활성화 상태가 초기화되었습니다.");
   resetIdleTimer();
 }
-// -----------------------------------------------------------------
 
 function handleEmployeeClick(empNum, empName) {
   if (!globalSelectedMeal) {
@@ -191,6 +228,10 @@ function submitDataDirect(empNum, empName, meal, type, group, count, btnId) {
           const targetBtn = document.getElementById(btnId);
           if (targetBtn) targetBtn.classList.add(`done-${meal}`);
         }
+
+        // 🍒 데이터 전송 성공 시, 현황판 카운트 1(또는 방문객수) 증가!
+        incrementCount(meal, count);
+
         showToast(`✅ [${empName}] 식수(${count}명)가 완료되었습니다!`);
         resetIdleTimer();
       } else {
@@ -259,8 +300,25 @@ function updateClock() {
   const hours = String(now.getHours()).padStart(2, "0");
   const minutes = String(now.getMinutes()).padStart(2, "0");
   const seconds = String(now.getSeconds()).padStart(2, "0");
-
   const dayOfWeek = now.getDay();
+  const currentDateString = now.toLocaleDateString();
+
+  // 🍒 핵심 로직: 날짜가 바뀌는 순간(밤 12시) 모든 식수 기록 및 화면 불빛 강제 초기화!
+  if (dailyCounts.date !== currentDateString) {
+    dailyCounts = { 아침: 0, 점심: 0, 저녁: 0, date: currentDateString };
+    saveLocalCounts();
+    updateCountUI();
+
+    // 당일 중복 방지 기록도 메모리에서 삭제
+    for (let prop in todayMealRecords) {
+      delete todayMealRecords[prop];
+    }
+
+    // 화면에 켜져 있던 버튼 색상도 모두 초기화
+    document.querySelectorAll(".name-btn").forEach((btn) => {
+      btn.classList.remove("done-아침", "done-점심", "done-저녁");
+    });
+  }
 
   const daysData = [
     { text: "월", index: 1 },

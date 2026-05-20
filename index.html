@@ -104,15 +104,41 @@
         </div>
       </div>
 
-      <div class="group-box box-visitor">
-        <div class="group-title">방문객</div>
-        <div class="name-columns cols-1">
-          <button class="name-btn visitor-btn-new" onclick="handleVisitorClick('IPA산업')">IPA산업</button>
-          <button class="name-btn visitor-btn-new" onclick="handleVisitorClick('선도화학 소속')">선도화학 소속</button>
-          <button class="name-btn visitor-btn-new" onclick="handleVisitorClick('선도산업 소속')">선도산업 소속</button>
-          <button class="name-btn visitor-btn-new" onclick="handleVisitorClick('기 타')">기 타</button>
+      <div class="right-column">
+        <div class="group-box box-visitor">
+          <div class="group-title">방문객</div>
+          <div class="name-columns cols-1">
+            <button class="name-btn visitor-btn-new" onclick="handleVisitorClick('IPA산업')">IPA산업</button>
+            <button class="name-btn visitor-btn-new" onclick="handleVisitorClick('선도화학 소속')">선도화학 소속</button>
+            <button class="name-btn visitor-btn-new" onclick="handleVisitorClick('선도산업 소속')">선도산업 소속</button>
+            <button class="name-btn visitor-btn-new" onclick="handleVisitorClick('기 타')">기 타</button>
+          </div>
+        </div>
+        
+        <div class="counter-box">
+          <div class="counter-row c-green">
+            <div class="c-label">아침</div>
+            <div class="c-num" id="count-아침">0</div>
+            <div class="c-unit">명</div>
+          </div>
+          <div class="counter-row c-orange">
+            <div class="c-label">점심</div>
+            <div class="c-num" id="count-점심">0</div>
+            <div class="c-unit">명</div>
+          </div>
+          <div class="counter-row c-purple">
+            <div class="c-label">저녁</div>
+            <div class="c-num" id="count-저녁">0</div>
+            <div class="c-unit">명</div>
+          </div>
+          <div class="counter-row c-total">
+            <div class="c-label">합계</div>
+            <div class="c-num" id="count-total">0</div>
+            <div class="c-unit">명</div>
+          </div>
         </div>
       </div>
+
     </div>
   </div>
   
