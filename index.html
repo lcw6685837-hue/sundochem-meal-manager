@@ -29,43 +29,51 @@
   </div>
 
   <div id="selectionScreen" class="selection-screen d-none">
-    <h1 class="selection-title"><span class="blue-text">본인확인</span>을 <span class="blue-text">선택</span>하세요.</h1>
     
+    <div class="selection-header">
+      <div class="clock-display" id="clockDisplay"></div>
+      <div class="global-meal-buttons">
+        <button class="g-meal-btn bg-green" id="g-meal-아침" onclick="setGlobalMeal('아침')">아침</button>
+        <button class="g-meal-btn bg-orange" id="g-meal-점심" onclick="setGlobalMeal('점심')">점심</button>
+        <button class="g-meal-btn bg-purple" id="g-meal-저녁" onclick="setGlobalMeal('저녁')">저녁</button>
+      </div>
+    </div>
+
     <div class="selection-content">
       <div class="group-box box-sundo">
         <div class="group-title">선도화학</div>
         <div class="name-columns cols-3">
-          <button class="name-btn" onclick="selectEmployeeFromList('0', '윤여환')">0-윤여환</button>
-          <button class="name-btn" onclick="selectEmployeeFromList('1', '이정현')">1-이정현</button>
-          <button class="name-btn" onclick="selectEmployeeFromList('2', '김영일')">2-김영일</button>
-          <button class="name-btn" onclick="selectEmployeeFromList('3', '고명권')">3-고명권</button>
-          <button class="name-btn" onclick="selectEmployeeFromList('4', '윤수익')">4-윤수익</button>
-          <button class="name-btn" onclick="selectEmployeeFromList('5', '이창우')">5-이창우</button>
-          <button class="name-btn" onclick="selectEmployeeFromList('6', '임승재')">6-임승재</button>
-          <button class="name-btn" onclick="selectEmployeeFromList('7', '서형진')">7-서형진</button>
-          <button class="name-btn" onclick="selectEmployeeFromList('8', '권오민')">8-권오민</button>
-          <button class="name-btn" onclick="selectEmployeeFromList('9', '손지훈')">9-손지훈</button>
-          <button class="name-btn" onclick="selectEmployeeFromList('10', '김연숙')">10-김연숙</button>
-          <button class="name-btn" onclick="selectEmployeeFromList('11', '여남숙')">11-여남숙</button>
-          <button class="name-btn" onclick="selectEmployeeFromList('12', '권정한')">12-권정한</button>
-          <button class="name-btn" onclick="selectEmployeeFromList('13', '문남일')">13-문남일</button>
-          <button class="name-btn" onclick="selectEmployeeFromList('14', '서명원')">14-서명원</button>
-          <button class="name-btn" onclick="selectEmployeeFromList('15', '장동명')">15-장동명</button>
-          <button class="name-btn" onclick="selectEmployeeFromList('16', '정원근')">16-정원근</button>
-          <button class="name-btn" onclick="selectEmployeeFromList('17', '송명창')">17-송명창</button>
-          <button class="name-btn" onclick="selectEmployeeFromList('18', '이상로')">18-이상로</button>
-          <button class="name-btn" onclick="selectEmployeeFromList('19', '강석호')">19-강석호</button>
-          <button class="name-btn" onclick="selectEmployeeFromList('20', '김자연')">20-김자연</button>
-          <button class="name-btn" onclick="selectEmployeeFromList('21', '이요학')">21-이요학</button>
-          <button class="name-btn" onclick="selectEmployeeFromList('22', '최종선')">22-최종선</button>
-          <button class="name-btn" onclick="selectEmployeeFromList('23', '정민교')">23-정민교</button>
-          <button class="name-btn" onclick="selectEmployeeFromList('24', '오진택')">24-오진택</button>
-          <button class="name-btn" onclick="selectEmployeeFromList('25', '고동수')">25-고동수</button>
-          <button class="name-btn" onclick="selectEmployeeFromList('26', '김동준')">26-김동준</button>
-          <button class="name-btn" onclick="selectEmployeeFromList('27', '김재용')">27-김재용</button>
-          <button class="name-btn" onclick="selectEmployeeFromList('28', '유영숙')">28-유영숙</button>
-          <button class="name-btn" onclick="selectEmployeeFromList('29', '민정현')">29-민정현</button>
-          <button class="name-btn" onclick="selectEmployeeFromList('30', '이용현')">30-이용현</button>
+          <button class="name-btn" id="emp-btn-0" onclick="handleEmployeeClick('0', '윤여환')">0-윤여환</button>
+          <button class="name-btn" id="emp-btn-1" onclick="handleEmployeeClick('1', '이정현')">1-이정현</button>
+          <button class="name-btn" id="emp-btn-2" onclick="handleEmployeeClick('2', '김영일')">2-김영일</button>
+          <button class="name-btn" id="emp-btn-3" onclick="handleEmployeeClick('3', '고명권')">3-고명권</button>
+          <button class="name-btn" id="emp-btn-4" onclick="handleEmployeeClick('4', '윤수익')">4-윤수익</button>
+          <button class="name-btn" id="emp-btn-5" onclick="handleEmployeeClick('5', '이창우')">5-이창우</button>
+          <button class="name-btn" id="emp-btn-6" onclick="handleEmployeeClick('6', '임승재')">6-임승재</button>
+          <button class="name-btn" id="emp-btn-7" onclick="handleEmployeeClick('7', '서형진')">7-서형진</button>
+          <button class="name-btn" id="emp-btn-8" onclick="handleEmployeeClick('8', '권오민')">8-권오민</button>
+          <button class="name-btn" id="emp-btn-9" onclick="handleEmployeeClick('9', '손지훈')">9-손지훈</button>
+          <button class="name-btn" id="emp-btn-10" onclick="handleEmployeeClick('10', '김연숙')">10-김연숙</button>
+          <button class="name-btn" id="emp-btn-11" onclick="handleEmployeeClick('11', '여남숙')">11-여남숙</button>
+          <button class="name-btn" id="emp-btn-12" onclick="handleEmployeeClick('12', '권정한')">12-권정한</button>
+          <button class="name-btn" id="emp-btn-13" onclick="handleEmployeeClick('13', '문남일')">13-문남일</button>
+          <button class="name-btn" id="emp-btn-14" onclick="handleEmployeeClick('14', '서명원')">14-서명원</button>
+          <button class="name-btn" id="emp-btn-15" onclick="handleEmployeeClick('15', '장동명')">15-장동명</button>
+          <button class="name-btn" id="emp-btn-16" onclick="handleEmployeeClick('16', '정원근')">16-정원근</button>
+          <button class="name-btn" id="emp-btn-17" onclick="handleEmployeeClick('17', '송명창')">17-송명창</button>
+          <button class="name-btn" id="emp-btn-18" onclick="handleEmployeeClick('18', '이상로')">18-이상로</button>
+          <button class="name-btn" id="emp-btn-19" onclick="handleEmployeeClick('19', '강석호')">19-강석호</button>
+          <button class="name-btn" id="emp-btn-20" onclick="handleEmployeeClick('20', '김자연')">20-김자연</button>
+          <button class="name-btn" id="emp-btn-21" onclick="handleEmployeeClick('21', '이요학')">21-이요학</button>
+          <button class="name-btn" id="emp-btn-22" onclick="handleEmployeeClick('22', '최종선')">22-최종선</button>
+          <button class="name-btn" id="emp-btn-23" onclick="handleEmployeeClick('23', '정민교')">23-정민교</button>
+          <button class="name-btn" id="emp-btn-24" onclick="handleEmployeeClick('24', '오진택')">24-오진택</button>
+          <button class="name-btn" id="emp-btn-25" onclick="handleEmployeeClick('25', '고동수')">25-고동수</button>
+          <button class="name-btn" id="emp-btn-26" onclick="handleEmployeeClick('26', '김동준')">26-김동준</button>
+          <button class="name-btn" id="emp-btn-27" onclick="handleEmployeeClick('27', '김재용')">27-김재용</button>
+          <button class="name-btn" id="emp-btn-28" onclick="handleEmployeeClick('28', '유영숙')">28-유영숙</button>
+          <button class="name-btn" id="emp-btn-29" onclick="handleEmployeeClick('29', '민정현')">29-민정현</button>
+          <button class="name-btn" id="emp-btn-30" onclick="handleEmployeeClick('30', '이용현')">30-이용현</button>
         </div>
       </div>
 
@@ -73,24 +81,24 @@
         <div class="group-box box-seonil">
           <div class="group-title">선일기업</div>
           <div class="name-columns cols-2">
-            <button class="name-btn" onclick="selectEmployeeFromList('31', '김창수')">31-김창수</button>
-            <button class="name-btn" onclick="selectEmployeeFromList('32', '박홍복')">32-박홍복</button>
-            <button class="name-btn" onclick="selectEmployeeFromList('33', '이동수')">33-이동수</button>
-            <button class="name-btn" onclick="selectEmployeeFromList('34', '베스')">34-베스</button>
-            <button class="name-btn" onclick="selectEmployeeFromList('35', '박할')">35-박할</button>
-            <button class="name-btn" onclick="selectEmployeeFromList('36', '맥스')">36-맥스</button>
-            <button class="name-btn" onclick="selectEmployeeFromList('37', '한상범')">37-한상범</button>
-            <button class="name-btn" onclick="selectEmployeeFromList('38', '오해도')">38-오해도</button>
-            <button class="name-btn" onclick="selectEmployeeFromList('39', '이운재')">39-이운재</button>
-            <button class="name-btn" onclick="selectEmployeeFromList('40', '하헌구')">40-하헌구</button>
-            <button class="name-btn" onclick="selectEmployeeFromList('41', '김기화')">41-김기화</button>
+            <button class="name-btn" id="emp-btn-31" onclick="handleEmployeeClick('31', '김창수')">31-김창수</button>
+            <button class="name-btn" id="emp-btn-32" onclick="handleEmployeeClick('32', '박홍복')">32-박홍복</button>
+            <button class="name-btn" id="emp-btn-33" onclick="handleEmployeeClick('33', '이동수')">33-이동수</button>
+            <button class="name-btn" id="emp-btn-34" onclick="handleEmployeeClick('34', '베스')">34-베스</button>
+            <button class="name-btn" id="emp-btn-35" onclick="handleEmployeeClick('35', '박할')">35-박할</button>
+            <button class="name-btn" id="emp-btn-36" onclick="handleEmployeeClick('36', '맥스')">36-맥스</button>
+            <button class="name-btn" id="emp-btn-37" onclick="handleEmployeeClick('37', '한상범')">37-한상범</button>
+            <button class="name-btn" id="emp-btn-38" onclick="handleEmployeeClick('38', '오해도')">38-오해도</button>
+            <button class="name-btn" id="emp-btn-39" onclick="handleEmployeeClick('39', '이운재')">39-이운재</button>
+            <button class="name-btn" id="emp-btn-40" onclick="handleEmployeeClick('40', '하헌구')">40-하헌구</button>
+            <button class="name-btn" id="emp-btn-41" onclick="handleEmployeeClick('41', '김기화')">41-김기화</button>
           </div>
         </div>
 
         <div class="group-box box-sundoind">
           <div class="group-title">선도산업</div>
           <div class="name-columns cols-1">
-            <button class="name-btn" onclick="selectEmployeeFromList('42', '이인덕')">42-이인덕</button>
+            <button class="name-btn" id="emp-btn-42" onclick="handleEmployeeClick('42', '이인덕')">42-이인덕</button>
           </div>
         </div>
       </div>
@@ -98,42 +106,13 @@
       <div class="group-box box-visitor">
         <div class="group-title">방문객</div>
         <div class="name-columns cols-1">
-          <button class="name-btn visitor-btn-new" onclick="selectVisitorFromList('IPA산업')">IPA산업</button>
-          <button class="name-btn visitor-btn-new" onclick="selectVisitorFromList('선도화학 소속')">선도화학 소속</button>
-          <button class="name-btn visitor-btn-new" onclick="selectVisitorFromList('선도산업 소속')">선도산업 소속</button>
-          <button class="name-btn visitor-btn-new" onclick="selectVisitorFromList('기 타')">기 타</button>
+          <button class="name-btn visitor-btn-new" onclick="handleVisitorClick('IPA산업')">IPA산업</button>
+          <button class="name-btn visitor-btn-new" onclick="handleVisitorClick('선도화학 소속')">선도화학 소속</button>
+          <button class="name-btn visitor-btn-new" onclick="handleVisitorClick('선도산업 소속')">선도산업 소속</button>
+          <button class="name-btn visitor-btn-new" onclick="handleVisitorClick('기 타')">기 타</button>
         </div>
       </div>
     </div>
-  </div>
-
-  <div id="dashboardScreen" class="dashboard-container d-none">
-    
-    <div class="header-top-bar">
-      <img src="logo.png" alt="SUNDOCHEM Logo" class="logo-img">
-      <span class="logo-text">SUNDOCHEMICAL</span>
-      </div>
-
-    <header class="sub-header">
-      <div class="clock-display" id="clockDisplay"></div>
-      <div class="sundo-banner">
-        <span class="red-text">S</span>UNDO <span class="red-text">M</span>EAL <span class="red-text">C</span>OUNT <span class="red-text">M</span>ONITORING
-      </div>
-    </header>
-
-    <main class="single-layout">
-      <section class="panel meal-panel-centered">
-        <div class="emp-name-box" id="empNameDisplay">이름 표시 대기중</div>
-        
-        <div class="meal-buttons-large">
-          <button class="meal-btn red" id="meal-아침" onclick="selectMeal('아침')">아침</button>
-          <button class="meal-btn cyan" id="meal-점심" onclick="selectMeal('점심')">점심</button>
-          <button class="meal-btn blue" id="meal-저녁" onclick="selectMeal('저녁')">저녁</button>
-        </div>
-        
-        <button class="confirm-btn-large" onclick="submitData()">확 인</button>
-      </section>
-    </main>
   </div>
   
   <div id="toast" class="toast"></div>

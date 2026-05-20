@@ -2,20 +2,15 @@
 const WEB_APP_URL =
   "https://script.google.com/macros/s/AKfycbzaGhrbsTtD5eWlchjFteHWkSxN3Tx0HILuWAoT108RWivqLncW0p7tG64Fw4v6AY3j/exec";
 
-let employeeDB = {};
 const todayMealRecords = {};
-let currentInputNumber = "";
-let currentEmpName = "";
-let selectedMeal = null;
-
-let selectedVisitor = null;
-let visitorCount = 0;
-let tempVisitorType = "";
-let tempVisitorCountStr = "1";
-
 const introScreen = document.getElementById("introScreen");
+const selectionScreen = document.getElementById("selectionScreen");
 let idleTimer = null;
 const IDLE_TIMEOUT = 30000;
+
+let globalSelectedMeal = null;
+let tempVisitorType = "";
+let tempVisitorCountStr = "1";
 
 function enterKiosk() {
   if (!document.fullscreenElement) {
@@ -24,24 +19,18 @@ function enterKiosk() {
     });
   }
   introScreen.classList.add("hidden");
-  document.getElementById("selectionScreen").classList.remove("d-none");
-  document.getElementById("dashboardScreen").classList.add("d-none");
+  selectionScreen.classList.remove("d-none");
   resetIdleTimer();
 }
 
 function returnToKioskIntro() {
   introScreen.classList.remove("hidden");
-  document.getElementById("selectionScreen").classList.add("d-none");
-  document.getElementById("dashboardScreen").classList.add("d-none");
-  clearSelection();
+  selectionScreen.classList.add("d-none");
   closeVisitorModal();
-}
-
-function returnToSelectionScreen() {
-  document.getElementById("dashboardScreen").classList.add("d-none");
-  document.getElementById("selectionScreen").classList.remove("d-none");
-  clearSelection();
-  resetIdleTimer();
+  globalSelectedMeal = null;
+  document
+    .querySelectorAll(".g-meal-btn")
+    .forEach((btn) => btn.classList.remove("active"));
 }
 
 function resetIdleTimer() {
@@ -54,29 +43,47 @@ function resetIdleTimer() {
 document.addEventListener("click", resetIdleTimer);
 document.addEventListener("touchstart", resetIdleTimer);
 
-function clearSelection() {
-  currentInputNumber = "";
-  currentEmpName = "";
-  selectedVisitor = null;
-  visitorCount = 0;
-  selectedMeal = null;
+function setGlobalMeal(meal) {
+  globalSelectedMeal = meal;
   document
-    .querySelectorAll(".meal-btn")
+    .querySelectorAll(".g-meal-btn")
     .forEach((btn) => btn.classList.remove("active"));
-}
-
-function selectEmployeeFromList(empNum, empName) {
-  clearSelection();
-  currentInputNumber = empNum;
-  currentEmpName = empName;
-  document.getElementById("empNameDisplay").innerText = currentEmpName;
-  document.getElementById("selectionScreen").classList.add("d-none");
-  document.getElementById("dashboardScreen").classList.remove("d-none");
+  document.getElementById(`g-meal-${meal}`).classList.add("active");
   resetIdleTimer();
 }
 
-function selectVisitorFromList(visitorType) {
-  clearSelection();
+function handleEmployeeClick(empNum, empName) {
+  if (!globalSelectedMeal) {
+    showToast("🚨 우측 상단의 식사(아침/점심/저녁)를 먼저 선택하세요!", true);
+    return;
+  }
+  if (
+    todayMealRecords[empNum] &&
+    todayMealRecords[empNum].includes(globalSelectedMeal)
+  ) {
+    showToast(
+      `🚨 [${empName}]님은 이미 '${globalSelectedMeal}' 식사가 완료되었습니다.`,
+      true,
+    );
+    return;
+  }
+  showToast(`⏳ [${empName}]님 저장 중...`);
+  submitDataDirect(
+    empNum,
+    empName,
+    globalSelectedMeal,
+    "사내직원",
+    "선도화학",
+    1,
+    `emp-btn-${empNum}`,
+  );
+}
+
+function handleVisitorClick(visitorType) {
+  if (!globalSelectedMeal) {
+    showToast("🚨 우측 상단의 식사(아침/점심/저녁)를 먼저 선택하세요!", true);
+    return;
+  }
   tempVisitorType = visitorType;
   tempVisitorCountStr = "1";
   document.getElementById("modalTitle").innerText =
@@ -85,120 +92,6 @@ function selectVisitorFromList(visitorType) {
     tempVisitorCountStr;
   document.getElementById("visitorModal").style.display = "flex";
   resetIdleTimer();
-}
-
-function showToast(message, isError = false) {
-  const toast = document.getElementById("toast");
-  toast.innerText = message;
-  isError ? toast.classList.add("error") : toast.classList.remove("error");
-  toast.classList.add("show");
-  setTimeout(() => {
-    toast.classList.remove("show");
-  }, 1500);
-}
-
-const memoContainer = document.getElementById("memoContainer");
-const memoDisplay = document.getElementById("memoDisplay");
-const memoText = document.getElementById("memoText");
-const messageInput = document.getElementById("messageInput");
-const defaultMessage = "[알림] 이곳을 터치하여 식당 전달사항을 입력하세요.";
-
-// -----------------------------------------------------------------
-// 🍒 실시간 클라우드(GAS) 동기화 및 30초 자동 업데이트 로직
-// -----------------------------------------------------------------
-let isMemoFocused = false;
-
-function loadEmployeeDataAndMemo() {
-  fetch(WEB_APP_URL, { redirect: "follow" })
-    .then((response) => response.json())
-    .then((data) => {
-      if (data.employees) {
-        employeeDB = data.employees;
-        if (!isMemoFocused) {
-          const savedMemo = data.memo;
-          if (savedMemo && savedMemo.trim() !== "") {
-            memoText.textContent = savedMemo.trim();
-            messageInput.value = savedMemo.trim();
-          } else {
-            memoText.textContent = defaultMessage;
-            messageInput.value = "";
-          }
-        }
-      } else {
-        employeeDB = data;
-      }
-    })
-    .catch((error) => console.error("데이터 로드 실패:", error));
-}
-
-loadEmployeeDataAndMemo();
-setInterval(loadEmployeeDataAndMemo, 30000);
-
-function updateClock() {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, "0");
-  const date = String(now.getDate()).padStart(2, "0");
-  const hours = String(now.getHours()).padStart(2, "0");
-  const minutes = String(now.getMinutes()).padStart(2, "0");
-  const seconds = String(now.getSeconds()).padStart(2, "0");
-
-  document.getElementById("clockDisplay").innerHTML = `
-    <span>${year}</span> <span>${month}</span> <span>${date}</span> : 
-    <span>${hours}</span> <span>${minutes}</span> <span>${seconds}</span>
-  `;
-}
-setInterval(updateClock, 1000);
-updateClock();
-
-memoContainer.addEventListener("click", () => {
-  isMemoFocused = true;
-  memoDisplay.style.display = "none";
-  messageInput.style.display = "block";
-  messageInput.focus();
-});
-
-messageInput.addEventListener("blur", () => {
-  isMemoFocused = false;
-  const newMemo = messageInput.value.trim();
-
-  if (newMemo) {
-    memoText.textContent = newMemo;
-  } else {
-    memoText.textContent = defaultMessage;
-  }
-
-  messageInput.style.display = "none";
-  memoDisplay.style.display = "flex";
-
-  // 🍒 JS에서도 듀얼 애니메이션(좌->우 + 상하지그재그)을 완벽하게 재시작시킴
-  memoText.style.animation = "none";
-  void memoText.offsetWidth;
-  memoText.style.animation =
-    "scroll-right 30s linear infinite, zigzag 2.5s ease-in-out infinite";
-
-  const memoPayload = { action: "saveMemo", memo: newMemo };
-  fetch(WEB_APP_URL, {
-    method: "POST",
-    headers: { "Content-Type": "text/plain;charset=utf-8" },
-    body: JSON.stringify(memoPayload),
-  }).catch((err) => console.error("메모 동기화 실패:", err));
-});
-
-function selectMeal(mealType) {
-  if (
-    currentInputNumber !== "" &&
-    todayMealRecords[currentInputNumber] &&
-    todayMealRecords[currentInputNumber].includes(mealType)
-  ) {
-    showToast(`🚨 이미 '${mealType}' 식사가 완료된 사원입니다.`, true);
-    return;
-  }
-  document
-    .querySelectorAll(".meal-btn")
-    .forEach((btn) => btn.classList.remove("active"));
-  selectedMeal = mealType;
-  document.getElementById(`meal-${mealType}`).classList.add("active");
 }
 
 function closeVisitorModal() {
@@ -235,61 +128,48 @@ function confirmVisitorCount() {
     showToast("🚨 인원수를 정확히 입력해 주세요.", true);
     return;
   }
-
-  visitorCount = count;
-  selectedVisitor = tempVisitorType;
-
-  document.getElementById("empNameDisplay").innerText =
-    `${selectedVisitor} (${visitorCount}명)`;
   closeVisitorModal();
-
-  document.getElementById("selectionScreen").classList.add("d-none");
-  document.getElementById("dashboardScreen").classList.remove("d-none");
-  resetIdleTimer();
+  showToast(`⏳ [${tempVisitorType}] 저장 중...`);
+  submitDataDirect(
+    "-",
+    tempVisitorType,
+    globalSelectedMeal,
+    "방문객",
+    tempVisitorType,
+    count,
+    null,
+  );
 }
 
-function submitData() {
-  if (!currentEmpName && !selectedVisitor) {
-    showToast("🚨 본인 확인 또는 방문객 선택이 누락되었습니다.", true);
-    return;
-  }
-  if (!selectedMeal) {
-    showToast("🚨 식사(아침/점심/저녁)를 선택해 주세요.", true);
-    return;
-  }
-
-  const confirmBtn = document.querySelector(".confirm-btn-large");
-  confirmBtn.innerText = "저장 중...";
-  confirmBtn.disabled = true;
-
+function submitDataDirect(empNum, empName, meal, type, group, count, btnId) {
   const payload = {
     date: new Date().toLocaleDateString(),
     time: new Date().toLocaleTimeString(),
-    type: selectedVisitor ? "방문객" : "사내직원",
-    group: selectedVisitor ? selectedVisitor : "선도화학",
-    empNumber: currentInputNumber || "-",
-    empName: currentEmpName || selectedVisitor,
-    meal: selectedMeal,
-    count: selectedVisitor ? visitorCount : 1,
+    type: type,
+    group: group,
+    empNumber: empNum,
+    empName: empName,
+    meal: meal,
+    count: count,
   };
 
   fetch(WEB_APP_URL, {
     method: "POST",
     headers: { "Content-Type": "text/plain;charset=utf-8" },
     body: JSON.stringify(payload),
+    redirect: "follow",
   })
     .then((response) => response.json())
     .then((data) => {
       if (data.result === "success") {
-        if (currentInputNumber && selectedMeal) {
-          if (!todayMealRecords[currentInputNumber])
-            todayMealRecords[currentInputNumber] = [];
-          todayMealRecords[currentInputNumber].push(selectedMeal);
+        if (empNum !== "-") {
+          if (!todayMealRecords[empNum]) todayMealRecords[empNum] = [];
+          todayMealRecords[empNum].push(meal);
+          const targetBtn = document.getElementById(btnId);
+          if (targetBtn) targetBtn.classList.add(`done-${meal}`);
         }
-        showToast(
-          `✅ [${payload.empName}]님, 식수(${payload.count}명)가 저장되었습니다!`,
-        );
-        setTimeout(returnToSelectionScreen, 2000);
+        showToast(`✅ [${empName}] 식수(${count}명)가 완료되었습니다!`);
+        resetIdleTimer();
       } else {
         showToast("🚨 저장 실패! 관리자에게 문의하세요.", true);
       }
@@ -297,9 +177,133 @@ function submitData() {
     .catch((error) => {
       console.error("Error:", error);
       showToast("🚨 서버 통신 에러가 발생했습니다.", true);
-    })
-    .finally(() => {
-      confirmBtn.innerText = "확 인";
-      confirmBtn.disabled = false;
     });
 }
+
+function showToast(message, isError = false) {
+  const toast = document.getElementById("toast");
+  toast.innerText = message;
+  isError ? toast.classList.add("error") : toast.classList.remove("error");
+  toast.classList.add("show");
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 1500);
+}
+
+const memoContainer = document.getElementById("memoContainer");
+const memoDisplay = document.getElementById("memoDisplay");
+const memoText = document.getElementById("memoText");
+const messageInput = document.getElementById("messageInput");
+const defaultMessage = "[알림] 이곳을 터치하여 식당 전달사항을 입력하세요.";
+let isMemoFocused = false;
+
+function loadEmployeeDataAndMemo() {
+  const cacheBustUrl = `${WEB_APP_URL}?_=${new Date().getTime()}`;
+  fetch(cacheBustUrl, { redirect: "follow" })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.memo !== undefined && !isMemoFocused) {
+        const savedMemo = data.memo ? data.memo.trim() : "";
+        const currentDisplayMemo = memoText.textContent.trim();
+
+        if (savedMemo !== "" && savedMemo !== currentDisplayMemo) {
+          memoText.textContent = savedMemo;
+          messageInput.value = savedMemo;
+          memoText.style.animation = "none";
+          void memoText.offsetWidth;
+          memoText.style.animation =
+            "scroll-right 30s linear infinite, zigzag 2.5s ease-in-out infinite";
+        } else if (savedMemo === "" && currentDisplayMemo !== defaultMessage) {
+          memoText.textContent = defaultMessage;
+          messageInput.value = "";
+          memoText.style.animation = "none";
+          void memoText.offsetWidth;
+          memoText.style.animation =
+            "scroll-right 30s linear infinite, zigzag 2.5s ease-in-out infinite";
+        }
+      }
+    })
+    .catch((error) => console.error("실시간 클라우드 에러:", error));
+}
+loadEmployeeDataAndMemo();
+setInterval(loadEmployeeDataAndMemo, 30000);
+
+// -----------------------------------------------------------------
+// 🍒 캡틴 전용: LED 디지털 시계 및 요일 매칭 엔진
+// -----------------------------------------------------------------
+function updateClock() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const date = String(now.getDate()).padStart(2, "0");
+  const hours = String(now.getHours()).padStart(2, "0");
+  const minutes = String(now.getMinutes()).padStart(2, "0");
+  const seconds = String(now.getSeconds()).padStart(2, "0");
+
+  const dayOfWeek = now.getDay(); // 0(일) ~ 6(토)
+
+  // 캡틴 이미지(월~일 순서) 맞춤 매열
+  const daysData = [
+    { text: "월", index: 1 },
+    { text: "화", index: 2 },
+    { text: "수", index: 3 },
+    { text: "목", index: 4 },
+    { text: "금", index: 5 },
+    { text: "토", index: 6 },
+    { text: "일", index: 0 },
+  ];
+
+  let dayHtml = "";
+  daysData.forEach((d) => {
+    const isActive = d.index === dayOfWeek ? "active" : "";
+    let colorClass = "";
+    if (d.text === "토") colorClass = "day-sat";
+    if (d.text === "일") colorClass = "day-sun";
+
+    // 점(dot)과 글자를 세로로 배치
+    dayHtml += `<div class="day-item ${isActive} ${colorClass}"><div class="dot"></div><span>${d.text}</span></div>`;
+  });
+
+  // LED 레이아웃으로 화면 렌더링
+  document.getElementById("clockDisplay").innerHTML = `
+    <div class="led-clock-wrapper">
+      <div class="led-left">
+        <div class="led-date">${year}. ${month}. ${date}.</div>
+        <div class="led-days">${dayHtml}</div>
+      </div>
+      <div class="led-time">${hours}:${minutes} <span class="sec">${seconds}</span></div>
+    </div>
+  `;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+memoContainer.addEventListener("click", () => {
+  isMemoFocused = true;
+  memoDisplay.style.display = "none";
+  messageInput.style.display = "block";
+  messageInput.focus();
+});
+
+messageInput.addEventListener("blur", () => {
+  isMemoFocused = false;
+  const newMemo = messageInput.value.trim();
+
+  if (newMemo) memoText.textContent = newMemo;
+  else memoText.textContent = defaultMessage;
+
+  messageInput.style.display = "none";
+  memoDisplay.style.display = "flex";
+  memoText.style.animation = "none";
+  void memoText.offsetWidth;
+  memoText.style.animation =
+    "scroll-right 30s linear infinite, zigzag 2.5s ease-in-out infinite";
+
+  const memoPayload = { action: "saveMemo", memo: newMemo };
+  fetch(WEB_APP_URL, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify(memoPayload),
+    redirect: "follow",
+  }).catch((err) => console.error("메모 클라우드 전송 실패:", err));
+});

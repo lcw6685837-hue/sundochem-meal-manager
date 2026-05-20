@@ -3,7 +3,6 @@
   --panel-bg: #27344e; 
   --sundo-yellow: #fde68a; 
   --sundo-blue: #1e3a8a; 
-  --sundo-light-blue: #4f83cc;
   --border-yellow: #facc15;
   --border-cyan: #06b6d4;
   --text-light: #f8fafc;
@@ -14,7 +13,6 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Malgun Gothic', sans-serif; }
-
 body { background-color: var(--bg-color); color: var(--text-light); width: 100vw; height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; }
 
 /* 1. 대기 화면 (Intro) */
@@ -49,74 +47,77 @@ body { background-color: var(--bg-color); color: var(--text-light); width: 100vw
 }
 .intro-btn:active { transform: scale(0.95); background: rgba(255, 255, 255, 0.9); }
 
-/* 🍒 알림 패널: 레드 네온 및 지그재그 로직 탑재 */
+/* 알림 패널 */
 .intro-memo {
   position: absolute; bottom: 5vh; width: 85%; max-width: 900px; height: 9vh;
   background-color: #fde68a;
   border: 4px solid #facc15; border-radius: 12px;
   box-shadow: 0 10px 20px rgba(0,0,0,0.5); cursor: pointer; overflow: hidden;
 }
-.intro-memo .memo-display {
-  position: relative; width: 100%; height: 100%; display: flex; align-items: center; overflow: hidden;
-}
+.intro-memo .memo-display { position: relative; width: 100%; height: 100%; display: flex; align-items: center; overflow: hidden; }
 .intro-memo .memo-text {
-  position: absolute; white-space: nowrap; font-size: 3.5vh; line-height: 9vh; font-weight: 900; 
-  color: #000000; 
-  /* 🍒 강렬한 레드 네온 효과 */
+  position: absolute; white-space: nowrap; font-size: 3.5vh; line-height: 9vh; font-weight: 900; color: #000000; 
   text-shadow: 0 0 5px #ffffff, 0 0 10px #ffb3b3, 0 0 20px #ef4444, 0 0 30px #dc2626;
-  
-  /* 🍒 좌->우 스크롤(30초) + 지그재그 상하 이동(2.5초) 동시 적용 */
   animation: scroll-right 30s linear infinite, zigzag 2.5s ease-in-out infinite; 
 }
 .intro-memo .message-box {
   display: none; width: 100%; height: 100%; background-color: transparent; 
-  color: #1e3a8a; border: none; padding: 1vh 2vw; font-size: 3vh; font-weight: bold; 
-  resize: none; outline: none;
+  color: #1e3a8a; border: none; padding: 1vh 2vw; font-size: 3vh; font-weight: bold; resize: none; outline: none;
 }
-.intro-memo .message-box:focus {
-  background-color: #fef08a; border: 3px solid var(--border-cyan); border-radius: 8px;
-}
+.intro-memo .message-box:focus { background-color: #fef08a; border: 3px solid var(--border-cyan); border-radius: 8px; }
+@keyframes scroll-right { from { left: 0; transform: translateX(-100%); } to { left: 100%; transform: translateX(0); } }
+@keyframes zigzag { 0% { margin-top: -1.5vh; } 50% { margin-top: 1.5vh; } 100% { margin-top: -1.5vh; } }
 
-/* 🍒 [완벽 교정] 완전한 왼쪽(-100%)에서 시작하여 오른쪽 끝(100%)으로 흘러감 */
-@keyframes scroll-right { 
-  from { left: 0; transform: translateX(-100%); } 
-  to { left: 100%; transform: translateX(0); } 
-}
-
-/* 🍒 위아래로 통통 튀는 지그재그 애니메이션 마법 */
-@keyframes zigzag {
-  0%   { margin-top: -1.5vh; }
-  50%  { margin-top: 1.5vh; }
-  100% { margin-top: -1.5vh; }
-}
-
-
-/* 2. 본인확인 선택 화면 (Selection Screen) */
+/* 2. 신규 통합 화면 (Selection Screen) */
 .d-none { display: none !important; }
 
 .selection-screen {
   width: 100%; max-width: 1200px; padding: 2.5vh 2vw; display: flex; flex-direction: column;
-  background-color: #aecb98; 
-  height: 95vh; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-  border: 4px solid #8ba876;
+  background-color: #aecb98; height: 95vh; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 4px solid #8ba876;
 }
-.selection-title {
-  text-align: center; font-size: 5vh; font-weight: 900; color: #1e293b;
-  margin-bottom: 4vh; margin-top: 1vh; letter-spacing: 0.1vw; text-shadow: 1px 1px 3px rgba(255,255,255,0.5);
+
+/* 상단 영역 (시계 + 식사버튼) */
+.selection-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2vh; }
+
+/* 🍒 캡틴 전용: LED 디지털 시계 스타일 완벽 이식 */
+.led-clock-wrapper {
+  display: flex; align-items: center; background-color: #0a0a0a; padding: 1vh 2vw; 
+  border-radius: 8px; border: 3px solid #1f2937; gap: 2vw; 
+  box-shadow: inset 0 0 15px rgba(0,0,0,0.8), 0 5px 15px rgba(0,0,0,0.5); 
 }
-.selection-title .blue-text { color: #1e88e5; }
+.led-left { display: flex; flex-direction: column; align-items: center; gap: 0.5vh; }
+.led-date { 
+  color: #22c55e; font-family: 'Consolas', 'Courier New', monospace; font-size: 3.5vh; 
+  font-weight: bold; text-shadow: 0 0 8px rgba(34, 197, 94, 0.8); letter-spacing: 0.1vw; 
+}
+.led-days { display: flex; gap: 1vw; color: #64748b; font-size: 1.8vh; font-weight: bold; }
+.led-days .day-item { display: flex; flex-direction: column; align-items: center; gap: 0.3vh; }
+.led-days .day-item .dot { width: 0.6vh; height: 0.6vh; border-radius: 50%; background-color: transparent; }
+.led-days .day-item.active { color: #ffffff; }
+.led-days .day-item.active .dot { background-color: #facc15; box-shadow: 0 0 5px #facc15; }
+.led-days .day-sat { color: #3b82f6; } /* 토요일 파란색 */
+.led-days .day-sun { color: #ef4444; } /* 일요일 빨간색 */
+
+.led-time { 
+  color: #ef4444; font-family: 'Consolas', 'Courier New', monospace; font-size: 6.5vh; 
+  font-weight: bold; text-shadow: 0 0 12px rgba(239, 68, 68, 0.8); display: flex; 
+  align-items: baseline; gap: 0.5vw; font-variant-numeric: tabular-nums; 
+}
+.led-time .sec { font-size: 4vh; }
+
+.global-meal-buttons { display: flex; gap: 1vw; }
+.g-meal-btn { 
+  padding: 1.5vh 3vw; font-size: 3.5vh; font-weight: 900; color: white; 
+  border: 4px solid transparent; border-radius: 12px; cursor: pointer; opacity: 0.4; transition: all 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+.g-meal-btn.active { opacity: 1; transform: scale(1.1); border-color: white; box-shadow: 0 0 20px rgba(255,255,255,0.9); z-index: 10; }
+.bg-green { background-color: #65a30d; } 
+.bg-orange { background-color: #f59e0b; } 
+.bg-purple { background-color: #9333ea; } 
 
 .selection-content { display: flex; gap: 2vw; flex: 1; min-height: 0; }
-.group-box {
-  border-radius: 10px; position: relative; padding: 4vh 1vw 1vw 1vw;
-  display: flex; flex-direction: column; align-items: stretch;
-  box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
-}
-.group-title {
-  background-color: black; color: white; font-size: 2.5vh; font-weight: bold;
-  padding: 1vh 3vw; border-radius: 10px; position: absolute; top: -2.5vh; left: 50%; transform: translateX(-50%);
-  box-shadow: 0 4px 6px rgba(0,0,0,0.3); white-space: nowrap; border: 2px solid white;
-}
+.group-box { border-radius: 10px; position: relative; padding: 4vh 1vw 1vw 1vw; display: flex; flex-direction: column; align-items: stretch; box-shadow: inset 0 0 10px rgba(0,0,0,0.05); }
+.group-title { background-color: black; color: white; font-size: 2.5vh; font-weight: bold; padding: 1vh 3vw; border-radius: 10px; position: absolute; top: -2.5vh; left: 50%; transform: translateX(-50%); box-shadow: 0 4px 6px rgba(0,0,0,0.3); white-space: nowrap; border: 2px solid white; }
 
 .box-sundo { background-color: #e0f2fe; border: 2px solid #7dd3fc; flex: 1.3; } 
 .box-middle { flex: 1; display: flex; flex-direction: column; gap: 4vh; }
@@ -130,67 +131,18 @@ body { background-color: var(--bg-color); color: var(--text-light); width: 100vw
 .cols-1 { column-count: 1; }
 
 .name-btn {
-  display: block; width: 100%; margin-bottom: 0.8vh;
-  background-color: #334155; color: white; border: 1px solid #94a3b8;
-  padding: 1.2vh 0; font-size: 1.9vh; font-weight: bold; border-radius: 6px;
-  cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: all 0.1s; 
-  break-inside: avoid; 
+  display: block; width: 100%; margin-bottom: 0.8vh; background-color: #334155; color: white; border: 2px solid #94a3b8;
+  padding: 1.2vh 0; font-size: 1.9vh; font-weight: bold; border-radius: 6px; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.2); transition: all 0.2s; break-inside: avoid; 
 }
 .name-btn:active { transform: scale(0.95); background-color: #0f172a; }
-.name-btn:hover { background-color: #475569; }
+
+.name-btn.done-아침 { background-color: #65a30d !important; color: white; border-color: white; box-shadow: 0 0 10px rgba(101, 163, 13, 0.8); }
+.name-btn.done-점심 { background-color: #f59e0b !important; color: white; border-color: white; box-shadow: 0 0 10px rgba(245, 158, 11, 0.8); }
+.name-btn.done-저녁 { background-color: #9333ea !important; color: white; border-color: white; box-shadow: 0 0 10px rgba(147, 51, 234, 0.8); }
+
 .visitor-btn-new { background-color: #475569; font-size: 2vh; padding: 2vh 0; margin-bottom: 1.5vh;}
 
-/* 3. 새로운 대시보드 화면 (식사 선택 화면) */
-.dashboard-container { width: 100%; max-width: 1000px; padding: 1.4vh 1.4vw; display: flex; flex-direction: column; gap: 1.5vh; }
-
-.header-top-bar { position: relative; background-color: var(--sundo-yellow); color: var(--sundo-blue); display: flex; justify-content: center; align-items: center; padding: 1vh 0; font-size: 2.5vh; font-weight: 900; border-top-left-radius: 10px; border-top-right-radius: 10px; }
-.logo-img { height: 3vh; margin-right: 0.7vw; }
-.logo-text { letter-spacing: 0.2vw; }
-
-.sub-header { text-align: center; margin-bottom: 0.7vh; }
-.clock-display { display: flex; justify-content: center; gap: 0.7vw; margin-bottom: 2vh; font-size: 2.5vh; font-weight: 900; color: var(--border-yellow); text-shadow: 0 0 15px rgba(250, 204, 21, 0.4); }
-.clock-display span { background-color: #0f172a; padding: 0.7vh 1vw; border-radius: 8px; border: 2px solid #334155; box-shadow: 0 4px 10px rgba(0,0,0,0.8); }
-
-.sundo-banner {
-  background-color: var(--sundo-light-blue); color: white;
-  padding: 1.5vh 2vw; font-size: 3.5vh; font-weight: 900;
-  letter-spacing: 0.3vw; text-align: center; border-radius: 6px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-}
-.red-text { color: var(--color-red); }
-
-.single-layout { display: flex; flex-direction: column; gap: 2vh; flex: 1; }
-
-.panel { border: 2px solid var(--border-yellow); background-color: var(--panel-bg); padding: 2vh; border-radius: 8px; display: flex; flex-direction: column; }
-
-.meal-panel-centered { align-items: center; justify-content: center; padding: 5vh 2vw; flex: 1;}
-
-.emp-name-box {
-  background-color: var(--sundo-light-blue); color: white;
-  font-size: 6vh; font-weight: 900; padding: 2vh 8vw;
-  border-radius: 12px; margin-bottom: 6vh;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.4);
-  letter-spacing: 0.5vw;
-}
-
-.meal-buttons-large { display: flex; justify-content: center; gap: 5vw; width: 100%; margin-bottom: 6vh; }
-.meal-btn { width: 15vh; height: 15vh; border-radius: 50%; font-size: 3.5vh; font-weight: bold; color: white; border: 4px solid transparent; cursor: pointer; opacity: 0.4; transition: all 0.2s; }
-.meal-btn.red { background-color: var(--color-red); }
-.meal-btn.cyan { background-color: var(--color-cyan); }
-.meal-btn.blue { background-color: var(--color-blue); }
-.meal-btn.active { opacity: 1; transform: scale(1.15); border: 0.5vh solid #ffffff; box-shadow: 0 0 40px rgba(255, 255, 255, 0.9), inset 0 0 20px rgba(255, 255, 255, 0.5); z-index: 10; }
-
-.confirm-btn-large {
-  width: 40%;
-  background-color: var(--color-green); color: white; border: none;
-  padding: 2vh 0; 
-  font-size: 3.5vh; font-weight: bold; border-radius: 12px;
-  cursor: pointer; transition: all 0.2s; box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-}
-.confirm-btn-large:active { background-color: #4d7c0f; transform: scale(0.98); }
-.confirm-btn-large:disabled { background-color: #94a3b8; cursor: not-allowed; }
-
-.toast { visibility: hidden; min-width: 32vw; background-color: rgba(34, 197, 94, 0.95); color: #fff; text-align: center; border-radius: 50px; padding: 1.4vh 1.4vw; position: fixed; z-index: 1000; left: 50%; top: 20%; transform: translateX(-50%); font-size: 1.8vh; font-weight: bold; box-shadow: 0 10px 30px rgba(0,0,0,0.5); opacity: 0; transition: opacity 0.3s ease-in-out, top 0.3s ease-in-out; }
+.toast { visibility: hidden; min-width: 32vw; background-color: rgba(34, 197, 94, 0.95); color: #fff; text-align: center; border-radius: 50px; padding: 1.4vh 1.4vw; position: fixed; z-index: 1000; left: 50%; top: 20%; transform: translateX(-50%); font-size: 2.2vh; font-weight: bold; box-shadow: 0 10px 30px rgba(0,0,0,0.5); opacity: 0; transition: opacity 0.3s ease-in-out, top 0.3s ease-in-out; }
 .toast.show { visibility: visible; opacity: 1; top: 25%; }
 .toast.error { background-color: rgba(239, 68, 68, 0.95); }
 
