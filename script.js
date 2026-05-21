@@ -96,9 +96,6 @@ function resetMealUI() {
   resetIdleTimer();
 }
 
-// -----------------------------------------------------------------
-// 🍒 0.1초 컷 마법 적용 (선반영 후통신)
-// -----------------------------------------------------------------
 function handleEmployeeClick(empNum, empName) {
   if (!globalSelectedMeal) {
     showToast("🚨 우측 상단의 식사(아침/점심/저녁)를 먼저 선택하세요!", true);
@@ -109,7 +106,6 @@ function handleEmployeeClick(empNum, empName) {
     return;
   }
 
-  // 1. 구글 서버를 기다리지 않고 화면과 카운터를 즉시(0.1초) 갱신!
   if (!todayMealRecords[empNum]) todayMealRecords[empNum] = [];
   todayMealRecords[empNum].push(globalSelectedMeal);
   
@@ -120,7 +116,6 @@ function handleEmployeeClick(empNum, empName) {
   showToast(`✅ [${empName}] 접수 완료!`);
   resetIdleTimer();
 
-  // 2. 화면 뒤에서 조용히 구글 서버로 데이터 전송 (백그라운드 통신)
   submitDataDirectBg(empNum, empName, globalSelectedMeal, "사내직원", "선도화학", 1);
 }
 
@@ -170,18 +165,13 @@ function confirmVisitorCount() {
   }
   closeVisitorModal();
 
-  // 방문객도 0.1초 즉각 반영
   incrementCount(globalSelectedMeal, count);
   showToast(`✅ [${tempVisitorType}] ${count}명 접수 완료!`);
   resetIdleTimer();
 
-  // 백그라운드 전송
   submitDataDirectBg("-", tempVisitorType, globalSelectedMeal, "방문객", tempVisitorType, count);
 }
 
-// -----------------------------------------------------------------
-// 🍒 백그라운드 조용히 전송하는 엔진 (결과를 기다리지 않음)
-// -----------------------------------------------------------------
 function submitDataDirectBg(empNum, empName, meal, type, group, count) {
   const payload = {
     date: new Date().toLocaleDateString(),
@@ -201,7 +191,6 @@ function submitDataDirectBg(empNum, empName, meal, type, group, count) {
     redirect: "follow"
   }).catch((error) => console.error("백그라운드 통신 에러:", error));
 }
-// -----------------------------------------------------------------
 
 function showToast(message, isError = false) {
   const toast = document.getElementById("toast");
