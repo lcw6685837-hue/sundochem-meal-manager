@@ -6,7 +6,7 @@ let todayMealRecords = {};
 const introScreen = document.getElementById("introScreen");
 const selectionScreen = document.getElementById("selectionScreen");
 let idleTimer = null;
-const IDLE_TIMEOUT = 30000; 
+const IDLE_TIMEOUT = 10800000; 
 
 let globalSelectedMeal = null; 
 let tempVisitorType = "";
@@ -63,8 +63,7 @@ function returnToKioskIntro() {
   introScreen.classList.remove("hidden"); 
   selectionScreen.classList.add("d-none");
   closeVisitorModal(); 
-  globalSelectedMeal = null;
-  document.querySelectorAll('.g-meal-btn').forEach(btn => btn.classList.remove('active'));
+  clearTimeout(idleTimer); 
 }
 
 function resetIdleTimer() {
