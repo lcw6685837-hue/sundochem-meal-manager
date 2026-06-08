@@ -1,5 +1,7 @@
 // 👇 캡틴의 고유 구글 Apps Script 웹 앱 URL 장착!
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzaGhrbsTtD5eWlchjFteHWkSxN3Tx0HILuWAoT108RWivqLncW0p7tG64Fw4v6AY3j/exec";
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwnWWXhVquH_QvEYC4Qu6FwogrwK-EfbNMtG_6S3_PpbVYms6Z3j7Ib8jGfejsL6XD6/exec";
+
+// 화면 진입 시 현재 달 자동 세팅
 
 // 화면 진입 시 현재 달 자동 세팅
 window.onload = () => {
