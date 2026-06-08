@@ -168,7 +168,17 @@ function confirmVisitorCount() {
   showToast(`✅ [${tempVisitorType}] ${count}명 접수 완료!`);
   resetIdleTimer();
 
-  submitDataDirectBg("-", tempVisitorType, globalSelectedMeal, "방문객", tempVisitorType, count);
+  // 🍒 [캡틴의 요청사항 반영]
+  // 기본적으로 선택한 방문객 타입을 소속(group)으로 사용하되,
+  // 'IPA산업'을 눌렀을 때는 시트에 'IPA 소속'이라고 예쁘게 변환해서 저장합니다.
+  let visitorGroup = tempVisitorType;
+  if (visitorGroup === "IPA산업") {
+    visitorGroup = "IPA 소속";
+  }
+
+  // C열(구분)은 "방문객", D열(소속)은 변환된 visitorGroup을 전송합니다.
+  // 사번(empNum)과 이름(empName) 자리는 방문객이므로 깔끔하게 빈칸("")으로 비워둡니다.
+  submitDataDirectBg("", "", globalSelectedMeal, "방문객", visitorGroup, count);
 }
 
 function submitDataDirectBg(empNum, empName, meal, type, group, count) {
