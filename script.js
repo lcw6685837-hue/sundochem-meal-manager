@@ -1,6 +1,6 @@
 // 👇 캡틴의 고유 구글 Apps Script 웹 앱 URL
 const WEB_APP_URL =
-  "https://script.google.com/macros/s/AKfycbzaGhrbsTtD5eWlchjFteHWkSxN3Tx0HILuWAoT108RWivqLncW0p7tG64Fw4v6AY3j/exec";
+  "https://script.google.com/macros/s/AKfycbwnWWXhVquH_QvEYC4Qu6FwogrwK-EfbNMtG_6S3_PpbVYms6Z3j7Ib8jGfejsL6XD6/exec";  
 
 let todayMealRecords = {};
 const introScreen = document.getElementById("introScreen");
@@ -145,17 +145,6 @@ function inputVisitorCount(num) {
   document.getElementById("visitorCountDisplay").innerText = tempVisitorCountStr;
 }
 
-function deleteVisitorCount() {
-  tempVisitorCountStr = tempVisitorCountStr.slice(0, -1);
-  if (tempVisitorCountStr === "") tempVisitorCountStr = "0";
-  document.getElementById("visitorCountDisplay").innerText = tempVisitorCountStr;
-}
-
-function clearVisitorCount() {
-  tempVisitorCountStr = "0";
-  document.getElementById("visitorCountDisplay").innerText = tempVisitorCountStr;
-}
-
 function confirmVisitorCount() {
   let count = parseInt(tempVisitorCountStr);
   if (isNaN(count) || count <= 0) {
@@ -168,19 +157,15 @@ function confirmVisitorCount() {
   showToast(`✅ [${tempVisitorType}] ${count}명 접수 완료!`);
   resetIdleTimer();
 
-  // 🍒 [캡틴의 요청사항 반영]
-  // 기본적으로 선택한 방문객 타입을 소속(group)으로 사용하되,
-  // 'IPA산업'을 눌렀을 때는 시트에 'IPA 소속'이라고 예쁘게 변환해서 저장합니다.
-  let visitorGroup = tempVisitorType;
-  if (visitorGroup === "IPA산업") {
-    visitorGroup = "IPA 소속";
-  }
+  // 🍒 [캡틴의 특급 아이디어 적용]
+  // C열(구분) 자리에 "방문객" 대신 터치한 버튼의 이름(tempVisitorType)을 바로 집어넣습니다!
+  // 소속, 사번, 이름은 모두 빈칸("")으로 깔끔하게 비웁니다.
 
-  // C열(구분)은 "방문객", D열(소속)은 변환된 visitorGroup을 전송합니다.
-  // 사번(empNum)과 이름(empName) 자리는 방문객이므로 깔끔하게 빈칸("")으로 비워둡니다.
-  submitDataDirectBg("", "", globalSelectedMeal, "방문객", visitorGroup, count);
+  let visitorTypeC = tempVisitorType; // 예: "IPA산업", "기타" 등
+
+  // submitDataDirectBg(사번, 이름, 식사, 구분(C열), 소속(D열), 인원)
+  submitDataDirectBg("", "", globalSelectedMeal, visitorTypeC, "", count);
 }
-
 function submitDataDirectBg(empNum, empName, meal, type, group, count) {
   const payload = {
     date: new Date().toLocaleDateString(),
