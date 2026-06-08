@@ -146,24 +146,24 @@ function inputVisitorCount(num) {
 }
 
 function confirmVisitorCount() {
+  // 🍒 [가장 중요] 모달이 닫히면서 소속명이 지워지기 전에 변수에 먼저 안전하게 가두어 둡니다!
+  let visitorTypeC = tempVisitorType;
+
   let count = parseInt(tempVisitorCountStr);
   if (isNaN(count) || count <= 0) {
     showToast("🚨 인원수를 정확히 입력해 주세요.", true);
     return;
   }
+
+  // 데이터 백업이 끝난 후 안전하게 모달을 닫습니다.
   closeVisitorModal();
 
   incrementCount(globalSelectedMeal, count);
-  showToast(`✅ [${tempVisitorType}] ${count}명 접수 완료!`);
+  showToast(`✅ [${visitorTypeC}] ${count}명 접수 완료!`);
   resetIdleTimer();
 
-  // 🍒 [캡틴의 특급 아이디어 적용]
-  // C열(구분) 자리에 "방문객" 대신 터치한 버튼의 이름(tempVisitorType)을 바로 집어넣습니다!
-  // 소속, 사번, 이름은 모두 빈칸("")으로 깔끔하게 비웁니다.
-
-  let visitorTypeC = tempVisitorType; // 예: "IPA산업", "기타" 등
-
-  // submitDataDirectBg(사번, 이름, 식사, 구분(C열), 소속(D열), 인원)
+  // 🍒 캡틴의 아이디어 적용: C열(구분) 자리에 "IPA산업", "기타" 등의 구체적 소속을 실어서 보냅니다.
+  // 사번, 이름, 소속(D열) 자리는 깔끔하게 공란으로 비워서 전송합니다.
   submitDataDirectBg("", "", globalSelectedMeal, visitorTypeC, "", count);
 }
 function submitDataDirectBg(empNum, empName, meal, type, group, count) {
