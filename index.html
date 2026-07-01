@@ -6,10 +6,11 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <title>선도화학 식수인원 관리 모니터</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
 
+  <!-- 1. 대기 화면 (Intro) -->
   <div id="introScreen" class="intro-screen">
     <div class="intro-top-bar">
       <img src="logo.png" alt="SUNDOCHEM Logo">
@@ -28,9 +29,11 @@
     </div>
   </div>
 
+  <!-- 2. 신규 통합 화면: 본인확인 및 원클릭 식사 선택 -->
   <div id="selectionScreen" class="selection-screen d-none">
     
     <div class="selection-header">
+      <!-- 시크릿 마법: LED 시계 영역 전체를 누르면 처음으로 돌아갑니다! -->
       <div class="clock-display" id="clockDisplay" onclick="returnToKioskIntro()"></div>
       
       <div class="global-meal-buttons">
@@ -42,6 +45,7 @@
     </div>
 
     <div class="selection-content">
+      <!-- 좌측: 선도화학 -->
       <div class="group-box box-sundo">
         <div class="group-title">선도화학</div>
         <div class="name-columns cols-3">
@@ -54,7 +58,7 @@
           <button class="name-btn" id="emp-btn-6" onclick="handleEmployeeClick('6', '임승재')">6-임승재</button>
           <button class="name-btn" id="emp-btn-7" onclick="handleEmployeeClick('7', '서형진')">7-서형진</button>
           <button class="name-btn" id="emp-btn-8" onclick="handleEmployeeClick('8', '권오민')">8-권오민</button>
-          <button class="name-btn" id="emp-btn-9" onclick="handleEmployeeClick('9', '손지훈')">9-손지훈</button>
+          <button class="name-btn" id="emp-btn-9" onclick="손지훈('9', '손지훈')">9-손지훈</button>
           <button class="name-btn" id="emp-btn-10" onclick="handleEmployeeClick('10', '김연숙')">10-김연숙</button>
           <button class="name-btn" id="emp-btn-11" onclick="handleEmployeeClick('11', '여남숙')">11-여남숙</button>
           <button class="name-btn" id="emp-btn-12" onclick="handleEmployeeClick('12', '권정한')">12-권정한</button>
@@ -81,6 +85,7 @@
         </div>
       </div>
 
+      <!-- 중앙: 선일기업 & 선도산업 -->
       <div class="box-middle">
         <div class="group-box box-seonil">
           <div class="group-title">선일기업</div>
@@ -92,7 +97,10 @@
             <button class="name-btn" id="emp-btn-35" onclick="handleEmployeeClick('35', '박할')">35-박할</button>
             <button class="name-btn" id="emp-btn-36" onclick="handleEmployeeClick('36', '맥스')">36-맥스</button>
             <button class="name-btn" id="emp-btn-37" onclick="handleEmployeeClick('37', '한상범')">37-한상범</button>
-            <button class="name-btn" id="emp-btn-38" onclick="handleEmployeeClick('38', '오해도')">38-오해도</button>
+            
+            <!-- 🍒 체리 완료 조치: 퇴사한 38-오해도 사원을 격자 레이아웃 유지를 위해 아름다운 예비 버튼으로 변경! -->
+            <button class="name-btn spare-btn" id="emp-btn-38" disabled>38-(예 비)</button>
+            
             <button class="name-btn" id="emp-btn-39" onclick="handleEmployeeClick('39', '이운재')">39-이운재</button>
             <button class="name-btn" id="emp-btn-40" onclick="handleEmployeeClick('40', '하헌구')">40-하헌구</button>
             <button class="name-btn" id="emp-btn-41" onclick="handleEmployeeClick('41', '김기화')">41-김기화</button>
@@ -107,6 +115,7 @@
         </div>
       </div>
 
+      <!-- 우측: 방문객 및 실시간 식수 카운터 보드 -->
       <div class="right-column">
         <div class="group-box box-visitor">
           <div class="group-title">방문객</div>
@@ -147,6 +156,7 @@
   
   <div id="toast" class="toast"></div>
 
+  <!-- 방문객 전용 인원 입력 팝업 -->
   <div id="visitorModal" class="modal-overlay">
     <div class="modal-content">
       <h3 id="modalTitle">[소속] 식사 인원이 몇 명입니까?</h3>
@@ -172,6 +182,6 @@
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=2"></script>
 </body>
 </html>
